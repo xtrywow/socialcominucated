@@ -21,6 +21,13 @@ SOCIAL_HOSTS = (
     "yellowpages.com.au",
     "hipages.com.au",
     "oneflare.com.au",
+    # booking pages and free builder subdomains: the business has no site of its own
+    "gettimely.com",
+    "fresha.com",
+    "abacus.co",
+    "square.site",
+    "wixsite.com",
+    "wordpress.com",
 )
 USER_AGENT = "Mozilla/5.0 (compatible; AceAdsSiteAudit/0.1; +https://aceads.au)"
 BLOCKED_STATUSES = {401, 403, 429}  # bot protection, not a broken site
@@ -80,6 +87,14 @@ def pagespeed_score(url: str, api_key: str | None) -> float | None:
         return None
 
 
+def looks_like_bot_challenge(html: str) -> bool:
+    """A tiny page with no title, viewport or description is a challenge page, not the real site."""
+    return len(html) < 5000 and not any(
+        re.search(p, html, re.IGNORECASE)
+        for p in (r"<title[^>]*>\s*[^<\s]", r"<meta[^>]+name=[\"']viewport", r"<meta[^>]+name=[\"']description")
+    )
+
+
 def homepage(url: str) -> str:
     parts = urlparse(url)
     return f"{parts.scheme}://{parts.netloc}/"
@@ -94,12 +109,14 @@ def is_excluded(url: str) -> bool:
 def audit_website(url: str, api_key: str | None = None, use_pagespeed: bool = False) -> Audit:
     if not url:
         return Audit(status="none", issues=["no website"])
+    if "://" not in url:
+        url = "http://" + url
     if is_social_only(url):
         return Audit(status="social_only", issues=[f"no real website (uses {urlparse(url).netloc})"])
     try:
         start = time.monotonic()
         resp = requests.get(url, headers={"User-Agent": USER_AGENT}, timeout=15)
-        if resp.status_code in (404, 410) and urlparse(url).path not in ("", "/"):
+        if 400 <= resp.status_code < 500 and urlparse(url).path not in ("", "/"):
             # Directories often store a stale deep link; judge the homepage instead.
             start = time.monotonic()
             resp = requests.get(homepage(url), headers={"User-Agent": USER_AGENT}, timeout=15)
@@ -115,6 +132,8 @@ def audit_website(url: str, api_key: str | None = None, use_pagespeed: bool = Fa
     if resp.status_code >= 400:
         return Audit(status="unreachable", issues=[f"homepage shows an error page (HTTP {resp.status_code})"])
 
+    if looks_like_bot_challenge(resp.text):
+        return Audit(status="blocked", issues=["could not check (site served a bot-protection page)"])
     audit = Audit(status="ok", issues=analyse_html(resp.text, resp.url, load), load_seconds=load)
     if use_pagespeed:  # works without a key, at a lower rate limit
         audit.mobile_performance = pagespeed_score(resp.url, api_key)

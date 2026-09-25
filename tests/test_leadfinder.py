@@ -189,3 +189,21 @@ def test_government_sites_excluded():
 
     assert is_excluded("https://indigiscapes.redland.qld.gov.au/info")
     assert not is_excluded("https://cafe.com.au") and not is_excluded("")
+
+
+def test_bot_challenge_page_is_blocked(monkeypatch):
+    import leadfinder.audit as audit_mod
+
+    monkeypatch.setattr(audit_mod.requests, "get", lambda *a, **k: FakeResp(200, "https://x.com.au/", "<html><script>challenge()</script></html>"))
+    assert audit_website("https://x.com.au").status == "blocked"
+
+
+def test_url_without_scheme_and_booking_pages(monkeypatch):
+    import leadfinder.audit as audit_mod
+
+    seen = []
+    monkeypatch.setattr(audit_mod.requests, "get", lambda url, **k: seen.append(url) or FakeResp(200, url, GOOD_HTML))
+    assert audit_website("www.milanigelato.com.au").status == "ok"
+    assert seen == ["http://www.milanigelato.com.au"]
+    assert audit_website("https://tommytwoblades.gettimely.com/#home").status == "social_only"
+    assert audit_website("https://petersandko.wixsite.com/nowhere").status == "social_only"

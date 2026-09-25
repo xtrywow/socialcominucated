@@ -1,0 +1,38 @@
+[
+  {
+    "slug": "the-brass",
+    "name": "The Brass",
+    "kind": "Cafe",
+    "place": "Manson Road, Brisbane",
+    "address": "116 Manson Road, Brisbane QLD",
+    "phone": "+61 7 3113 3636",
+    "social": "https://www.facebook.com/profile.php?id=100093799565639",
+    "social_label": "Facebook",
+    "headline": "Coffee and food on Manson Road.",
+    "theme": "brass"
+  },
+  {
+    "slug": "graceville-moments",
+    "name": "Graceville Moments",
+    "kind": "Cafe",
+    "place": "Bank Road, Graceville",
+    "address": "8 Bank Road, Graceville QLD",
+    "phone": "+61 402 680 192",
+    "social": "https://www.facebook.com/gracevillemoments/",
+    "social_label": "Facebook",
+    "headline": "Your Graceville local on Bank Road.",
+    "theme": "morning"
+  },
+  {
+    "slug": "dropout-espresso",
+    "name": "Dropout Espresso",
+    "kind": "Espresso bar",
+    "place": "Main Street, Samford Village",
+    "address": "37 Main Street, Samford Village QLD",
+    "phone": "+61 7 3289 5555",
+    "social": "https://www.facebook.com/Dropout-espresso-110045364260266/",
+    "social_label": "Facebook",
+    "headline": "Espresso on Main Street, Samford Village.",
+    "theme": "dropout"
+  }
+]

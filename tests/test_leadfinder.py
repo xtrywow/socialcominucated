@@ -63,3 +63,11 @@ def test_parse_place_skips_closed():
     business = parse_place(place, "plumber")
     assert business.name == "Smith" and business.reviews == 88 and business.website == ""
     assert parse_place({**place, "businessStatus": "CLOSED_PERMANENTLY"}, "plumber") is None
+
+
+def test_cli_imports_and_requires_key(monkeypatch, tmp_path):
+    from leadfinder import cli
+
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.delenv("GOOGLE_API_KEY", raising=False)
+    assert cli.main([]) == 1

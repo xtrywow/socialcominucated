@@ -15,7 +15,7 @@ from pathlib import Path
 import requests
 
 from . import osm, places
-from .audit import Audit, audit_website
+from .audit import Audit, audit_website, is_excluded
 from .scoring import MAX_GAP, demand_score, gap_score, tier
 
 COLUMNS = [
@@ -76,7 +76,7 @@ def main(argv: list[str] | None = None) -> int:
         for b in found:
             seen.setdefault(b.place_id, b)
 
-    candidates = list(seen.values())
+    candidates = [b for b in seen.values() if not is_excluded(b.website)]
     if source == "google":  # OSM has no ratings, so there is nothing to filter on
         candidates = [
             b for b in candidates

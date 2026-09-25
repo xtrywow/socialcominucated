@@ -48,7 +48,7 @@ def test_demand_rewards_reviews_and_rating():
 
 
 def test_gap_score():
-    assert gap_score(Audit(status="unreachable")) == 50
+    assert gap_score(Audit(status="unreachable")) == 45
     assert gap_score(Audit(status="ok", issues=[])) == 0
     issues = ["no HTTPS (x)", "not mobile-friendly (x)", "looks outdated (x)", "slow to load (x)", "poor mobile performance (x)"]
     assert gap_score(Audit(status="ok", issues=issues)) == 60
@@ -145,3 +145,47 @@ def test_osm_fetch_falls_back_to_mirror(monkeypatch):
 
 def test_osm_missing_website_is_unknown_not_none():
     assert gap_score(Audit(status="unknown")) < gap_score(Audit(status="none"))
+
+
+class FakeResp:
+    def __init__(self, code, url="https://x.com.au/", text="<html></html>"):
+        self.status_code, self.url, self.text = code, url, text
+
+
+def test_stale_deep_link_falls_back_to_homepage(monkeypatch):
+    import leadfinder.audit as audit_mod
+
+    seen = []
+
+    def fake_get(url, **kwargs):
+        seen.append(url)
+        return FakeResp(404) if url.endswith("/old-page") else FakeResp(200, url, GOOD_HTML)
+
+    monkeypatch.setattr(audit_mod.requests, "get", fake_get)
+    result = audit_website("https://cafe.com.au/pages/old-page")
+    assert seen == ["https://cafe.com.au/pages/old-page", "https://cafe.com.au/"]
+    assert result.status == "ok"
+
+
+def test_connection_failures_are_classified(monkeypatch):
+    import leadfinder.audit as audit_mod
+
+    def raiser(exc):
+        def fake_get(*a, **k):
+            raise exc
+        return fake_get
+
+    monkeypatch.setattr(audit_mod.requests, "get", raiser(audit_mod.requests.exceptions.SSLError()))
+    assert audit_website("https://a.com.au").status == "ssl_error"
+    monkeypatch.setattr(audit_mod.requests, "get", raiser(audit_mod.requests.ConnectionError()))
+    dead = audit_website("https://a.com.au")
+    assert dead.status == "dead" and gap_score(dead) < gap_score(Audit(status="social_only"))
+    monkeypatch.setattr(audit_mod.requests, "get", lambda *a, **k: FakeResp(500))
+    assert audit_website("https://a.com.au").status == "unreachable"
+
+
+def test_government_sites_excluded():
+    from leadfinder.audit import is_excluded
+
+    assert is_excluded("https://indigiscapes.redland.qld.gov.au/info")
+    assert not is_excluded("https://cafe.com.au") and not is_excluded("")

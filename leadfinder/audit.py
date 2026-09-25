@@ -29,7 +29,7 @@ PAGESPEED_URL = "https://www.googleapis.com/pagespeedonline/v5/runPagespeed"
 
 @dataclass
 class Audit:
-    status: str  # none | unknown | social_only | unreachable | blocked | ok
+    status: str  # none | unknown | social_only | ssl_error | dead | unreachable | blocked | ok
     issues: list[str] = field(default_factory=list)
     load_seconds: float | None = None
     mobile_performance: float | None = None  # PageSpeed score 0-1
@@ -80,6 +80,17 @@ def pagespeed_score(url: str, api_key: str | None) -> float | None:
         return None
 
 
+def homepage(url: str) -> str:
+    parts = urlparse(url)
+    return f"{parts.scheme}://{parts.netloc}/"
+
+
+def is_excluded(url: str) -> bool:
+    """Government and education sites are not web-design prospects."""
+    host = urlparse(url).netloc.lower()
+    return host.endswith((".gov.au", ".edu.au"))
+
+
 def audit_website(url: str, api_key: str | None = None, use_pagespeed: bool = False) -> Audit:
     if not url:
         return Audit(status="none", issues=["no website"])
@@ -88,12 +99,21 @@ def audit_website(url: str, api_key: str | None = None, use_pagespeed: bool = Fa
     try:
         start = time.monotonic()
         resp = requests.get(url, headers={"User-Agent": USER_AGENT}, timeout=15)
+        if resp.status_code in (404, 410) and urlparse(url).path not in ("", "/"):
+            # Directories often store a stale deep link; judge the homepage instead.
+            start = time.monotonic()
+            resp = requests.get(homepage(url), headers={"User-Agent": USER_AGENT}, timeout=15)
         load = time.monotonic() - start
-        if resp.status_code in BLOCKED_STATUSES:
-            return Audit(status="blocked", issues=[f"could not check (site refused automated visit, HTTP {resp.status_code})"])
-        resp.raise_for_status()
+    except requests.exceptions.SSLError:
+        return Audit(status="ssl_error", issues=["security certificate error (browsers warn visitors away)"])
+    except (requests.ConnectionError, requests.Timeout):
+        return Audit(status="dead", issues=["website address not working (check the business is still open)"])
     except requests.RequestException as exc:
-        return Audit(status="unreachable", issues=[f"website broken or down ({type(exc).__name__})"])
+        return Audit(status="unreachable", issues=[f"website broken ({type(exc).__name__})"])
+    if resp.status_code in BLOCKED_STATUSES:
+        return Audit(status="blocked", issues=[f"could not check (site refused automated visit, HTTP {resp.status_code})"])
+    if resp.status_code >= 400:
+        return Audit(status="unreachable", issues=[f"homepage shows an error page (HTTP {resp.status_code})"])
 
     audit = Audit(status="ok", issues=analyse_html(resp.text, resp.url, load), load_seconds=load)
     if use_pagespeed:  # works without a key, at a lower rate limit

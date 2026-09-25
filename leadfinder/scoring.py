@@ -11,7 +11,14 @@ import math
 
 from .audit import Audit
 
-GAP_BY_STATUS = {"none": 35, "social_only": 45, "unreachable": 50, "unknown": 15}
+GAP_BY_STATUS = {
+    "none": 35,
+    "unknown": 15,  # OSM lists no website: unverified
+    "social_only": 45,
+    "ssl_error": 40,
+    "dead": 20,  # domain not working: often the business has closed
+    "unreachable": 45,  # homepage returns an error page
+}
 GAP_BY_ISSUE = {
     "no HTTPS": 15,
     "not mobile-friendly": 20,

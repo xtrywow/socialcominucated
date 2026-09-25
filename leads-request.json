@@ -1,0 +1,6 @@
+{
+  "source": "osm",
+  "categories": ["cafe", "dentist", "beauty salon", "physiotherapist"],
+  "limit": 80,
+  "pagespeed": false
+}

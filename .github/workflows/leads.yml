@@ -1,0 +1,34 @@
+# Runs the lead finder on GitHub's servers (which have open internet access).
+# Edit leads-request.json and push to start a run; results are printed to the
+# job log between CSV markers and uploaded as an artifact.
+name: Find leads
+
+on:
+  push:
+    paths: [leads-request.json]
+  workflow_dispatch:
+
+jobs:
+  leads:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements-dev.txt
+      - run: pytest -q
+      - name: Run lead finder
+        env:
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+        run: |
+          ARGS=$(python -c "import json,shlex; r=json.load(open('leads-request.json')); a=['--source',r['source'],'--limit',str(r.get('limit',0)),'--out','output/leads.csv','--categories',*r['categories']]; a+=['--pagespeed'] if r.get('pagespeed') else []; print(shlex.join(a))")
+          eval python -m leadfinder $ARGS
+          echo "===CSV-START==="
+          cat output/leads.csv
+          echo "===CSV-END==="
+      - uses: actions/upload-artifact@v4
+        with:
+          name: leads
+          path: output/leads.csv

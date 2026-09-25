@@ -23,7 +23,7 @@ jobs:
         env:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
         run: |
-          ARGS=$(python -c "import json,shlex; r=json.load(open('leads-request.json')); a=['--source',r['source'],'--limit',str(r.get('limit',0)),'--out','output/leads.csv','--categories',*r['categories']]; a+=['--pagespeed'] if r.get('pagespeed') else []; print(shlex.join(a))")
+          ARGS=$(python -c "import json,shlex; r=json.load(open('leads-request.json')); a=['--source',r['source'],'--limit',str(r.get('limit',0)),'--min-tier',r.get('min_tier','C'),'--out','output/leads.csv','--categories',*r['categories']]; a+=['--pagespeed'] if r.get('pagespeed') else []; print(shlex.join(a))")
           eval python -m leadfinder $ARGS
           echo "===CSV-START==="
           cat output/leads.csv

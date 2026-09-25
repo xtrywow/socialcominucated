@@ -8,10 +8,14 @@ import datetime as dt
 import json
 import os
 import sys
+import time
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
+import requests
+
 from . import osm, places
-from .audit import audit_website
+from .audit import Audit, audit_website
 from .scoring import MAX_GAP, demand_score, gap_score, tier
 
 COLUMNS = [
@@ -56,12 +60,17 @@ def main(argv: list[str] | None = None) -> int:
 
     seen: dict[str, places.Business] = {}
     for category in categories:
-        if source == "google":
-            found = places.search(api_key, category, config["area"])
-        elif category in config["osm_tags"]:
-            found = osm.search(category, config["osm_tags"][category], config["osm_bbox"])
-        else:
-            print(f"{category}: no OSM tags in config, skipped", file=sys.stderr)
+        try:
+            if source == "google":
+                found = places.search(api_key, category, config["area"])
+            elif category in config["osm_tags"]:
+                found = osm.search(category, config["osm_tags"][category], config["osm_bbox"])
+                time.sleep(2)  # be polite to the free Overpass servers
+            else:
+                print(f"{category}: no OSM tags in config, skipped", file=sys.stderr)
+                continue
+        except (requests.RequestException, RuntimeError) as exc:
+            print(f"{category}: search failed, skipped ({exc})", file=sys.stderr)
             continue
         print(f"{category}: {len(found)} businesses", file=sys.stderr)
         for b in found:
@@ -74,13 +83,23 @@ def main(argv: list[str] | None = None) -> int:
             if b.rating >= config.get("min_rating", 0) and b.reviews >= config.get("min_reviews", 0)
         ]
         candidates.sort(key=lambda b: b.reviews, reverse=True)
+    else:  # businesses with a listed website give verifiable evidence, audit them first
+        candidates.sort(key=lambda b: not b.website)
     if args.limit:
         candidates = candidates[: args.limit]
 
+    def run_audit(b: places.Business) -> Audit:
+        if source == "osm" and not b.website:
+            # OSM often just lacks the website tag; don't claim the business has none.
+            return Audit(status="unknown", issues=["no website listed on OpenStreetMap (verify on Google Maps)"])
+        return audit_website(b.website, api_key, args.pagespeed)
+
+    print(f"Auditing {len(candidates)} businesses...", file=sys.stderr)
+    with ThreadPoolExecutor(max_workers=4 if args.pagespeed else 16) as pool:
+        audits = list(pool.map(run_audit, candidates))
+
     rows = []
-    for i, b in enumerate(candidates, 1):
-        print(f"[{i}/{len(candidates)}] auditing {b.name}", file=sys.stderr)
-        audit = audit_website(b.website, api_key, args.pagespeed)
+    for b, audit in zip(candidates, audits):
         if source == "google":
             score = demand_score(b.rating, b.reviews) + gap_score(audit)
         else:  # no demand data: scale the website gap to 0-100

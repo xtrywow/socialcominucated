@@ -1,6 +1,7 @@
 {
   "source": "osm",
   "categories": ["cafe", "dentist", "beauty salon", "physiotherapist"],
-  "limit": 80,
+  "limit": 0,
+  "min_tier": "B",
   "pagespeed": false
 }

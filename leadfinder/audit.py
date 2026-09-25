@@ -29,7 +29,7 @@ PAGESPEED_URL = "https://www.googleapis.com/pagespeedonline/v5/runPagespeed"
 
 @dataclass
 class Audit:
-    status: str  # none | social_only | unreachable | blocked | ok
+    status: str  # none | unknown | social_only | unreachable | blocked | ok
     issues: list[str] = field(default_factory=list)
     load_seconds: float | None = None
     mobile_performance: float | None = None  # PageSpeed score 0-1

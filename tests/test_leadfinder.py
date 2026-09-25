@@ -105,7 +105,7 @@ def test_cli_osm_end_to_end(monkeypatch, tmp_path):
     raw = (tmp_path / "leads.csv").read_bytes()
     assert raw.startswith(b"\xef\xbb\xbf")  # BOM for Excel
     rows = list(csv.DictReader(raw.decode("utf-8-sig").splitlines()))
-    assert [(r["name"], r["score"], r["tier"]) for r in rows] == [("FB Cafe", "75", "A"), ("No Site Cafe", "58", "B")]
+    assert [(r["name"], r["score"], r["tier"]) for r in rows] == [("FB Cafe", "75", "A"), ("No Site Cafe", "25", "C")]
 
 
 def test_blocked_site_is_not_reported_broken(monkeypatch):
@@ -117,3 +117,31 @@ def test_blocked_site_is_not_reported_broken(monkeypatch):
     monkeypatch.setattr(audit_mod.requests, "get", lambda *a, **k: Resp())
     result = audit_website("https://protected.com.au")
     assert result.status == "blocked" and gap_score(result) == 0
+
+
+def test_osm_fetch_falls_back_to_mirror(monkeypatch):
+    from leadfinder import osm
+
+    calls = []
+
+    class Resp:
+        def __init__(self, code):
+            self.status_code = code
+
+        def raise_for_status(self):
+            pass
+
+        def json(self):
+            return {"elements": []}
+
+    def fake_post(url, **kwargs):
+        calls.append(url)
+        return Resp(504 if len(calls) == 1 else 200)
+
+    monkeypatch.setattr(osm.requests, "post", fake_post)
+    assert osm.fetch("q") == {"elements": []}
+    assert calls == osm.OVERPASS_URLS[:2]
+
+
+def test_osm_missing_website_is_unknown_not_none():
+    assert gap_score(Audit(status="unknown")) < gap_score(Audit(status="none"))

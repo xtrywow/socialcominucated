@@ -11,7 +11,7 @@ import math
 
 from .audit import Audit
 
-GAP_BY_STATUS = {"none": 35, "social_only": 45, "unreachable": 50}
+GAP_BY_STATUS = {"none": 35, "social_only": 45, "unreachable": 50, "unknown": 15}
 GAP_BY_ISSUE = {
     "no HTTPS": 15,
     "not mobile-friendly": 20,

@@ -6,13 +6,19 @@ Google's, but it needs no API key or billing account.
 
 from __future__ import annotations
 
+import time
 from urllib.parse import quote_plus
 
 import requests
 
 from .places import Business
 
-OVERPASS_URL = "https://overpass-api.de/api/interpreter"
+OVERPASS_URLS = [
+    "https://overpass-api.de/api/interpreter",
+    "https://overpass.kumi.systems/api/interpreter",
+    "https://overpass.private.coffee/api/interpreter",
+]
+RETRY_STATUSES = {429, 502, 503, 504}
 USER_AGENT = "AceAdsLeadFinder/0.1 (+https://aceads.au)"
 
 
@@ -48,13 +54,27 @@ def parse_element(element: dict, category: str) -> Business | None:
     )
 
 
+def fetch(query: str, attempts: int = 3) -> dict:
+    """POST to Overpass, rotating mirrors and backing off while servers are busy."""
+    last_error: Exception | None = None
+    for attempt in range(attempts):
+        for url in OVERPASS_URLS:
+            try:
+                resp = requests.post(url, data={"data": query}, headers={"User-Agent": USER_AGENT}, timeout=180)
+                if resp.status_code in RETRY_STATUSES:
+                    last_error = requests.HTTPError(f"{resp.status_code} from {url}")
+                    continue
+                resp.raise_for_status()
+                return resp.json()
+            except (requests.ConnectionError, requests.Timeout) as exc:
+                last_error = exc
+        time.sleep(10 * (attempt + 1))
+    raise last_error or RuntimeError("Overpass request failed")
+
+
 def search(category: str, tags: list[str], bbox: list[float]) -> list[Business]:
-    resp = requests.post(
-        OVERPASS_URL, data={"data": build_query(tags, bbox)}, headers={"User-Agent": USER_AGENT}, timeout=180
-    )
-    resp.raise_for_status()
     results = []
-    for element in resp.json().get("elements", []):
+    for element in fetch(build_query(tags, bbox)).get("elements", []):
         business = parse_element(element, category)
         if business:
             results.append(business)

@@ -70,4 +70,50 @@ def test_cli_imports_and_requires_key(monkeypatch, tmp_path):
 
     monkeypatch.chdir(tmp_path)
     monkeypatch.delenv("GOOGLE_API_KEY", raising=False)
-    assert cli.main([]) == 1
+    assert cli.main(["--source", "google"]) == 1
+
+
+def test_osm_parse_and_query():
+    from leadfinder.osm import build_query, parse_element
+
+    el = {"type": "node", "id": 7, "tags": {"name": "Bean Cafe", "addr:street": "Ann St", "contact:website": "http://bean.au"}}
+    b = parse_element(el, "cafe")
+    assert b.place_id == "osm:node/7" and b.website == "http://bean.au" and b.address == "Ann St"
+    assert "google.com/maps/search" in b.maps_url
+    assert parse_element({"type": "node", "id": 8, "tags": {}}, "cafe") is None
+    assert build_query(['"amenity"="cafe"'], [-27.7, 152.8, -27.2, 153.25]) == (
+        '[out:json][timeout:120];(nwr["amenity"="cafe"](-27.7,152.8,-27.2,153.25););out tags center;'
+    )
+
+
+def test_cli_osm_end_to_end(monkeypatch, tmp_path):
+    import csv
+    import json
+
+    from leadfinder import cli, osm
+    from leadfinder.places import Business
+
+    config = {"area": "Brisbane", "categories": ["cafe", "plumber"], "osm_bbox": [0, 0, 1, 1], "osm_tags": {"cafe": ["x"]}}
+    (tmp_path / "config.json").write_text(json.dumps(config))
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.delenv("GOOGLE_API_KEY", raising=False)
+    monkeypatch.setattr(osm, "search", lambda c, t, b: [
+        Business("osm:node/1", "No Site Cafe", c, "", "", "", 0.0, 0, ""),
+        Business("osm:node/2", "FB Cafe", c, "", "", "https://facebook.com/fb", 0.0, 0, ""),
+    ])
+    assert cli.main(["--out", "leads.csv"]) == 0
+    raw = (tmp_path / "leads.csv").read_bytes()
+    assert raw.startswith(b"\xef\xbb\xbf")  # BOM for Excel
+    rows = list(csv.DictReader(raw.decode("utf-8-sig").splitlines()))
+    assert [(r["name"], r["score"], r["tier"]) for r in rows] == [("FB Cafe", "75", "A"), ("No Site Cafe", "58", "B")]
+
+
+def test_blocked_site_is_not_reported_broken(monkeypatch):
+    import leadfinder.audit as audit_mod
+
+    class Resp:
+        status_code = 403
+
+    monkeypatch.setattr(audit_mod.requests, "get", lambda *a, **k: Resp())
+    result = audit_website("https://protected.com.au")
+    assert result.status == "blocked" and gap_score(result) == 0

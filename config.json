@@ -13,5 +13,18 @@
     "mechanic"
   ],
   "min_rating": 3.8,
-  "min_reviews": 5
+  "min_reviews": 5,
+  "osm_bbox": [-27.70, 152.80, -27.20, 153.25],
+  "osm_tags": {
+    "plumber": ["\"craft\"=\"plumber\""],
+    "electrician": ["\"craft\"=\"electrician\""],
+    "builder": ["\"craft\"=\"builder\"", "\"craft\"=\"carpenter\"", "\"craft\"=\"roofer\""],
+    "landscaper": ["\"craft\"=\"gardener\"", "\"shop\"=\"garden_centre\""],
+    "cleaning service": ["\"craft\"=\"cleaning\"", "\"shop\"=\"dry_cleaning\""],
+    "physiotherapist": ["\"healthcare\"=\"physiotherapist\""],
+    "dentist": ["\"amenity\"=\"dentist\""],
+    "beauty salon": ["\"shop\"=\"beauty\"", "\"shop\"=\"hairdresser\""],
+    "cafe": ["\"amenity\"=\"cafe\""],
+    "mechanic": ["\"shop\"=\"car_repair\"", "\"shop\"=\"tyres\""]
+  }
 }

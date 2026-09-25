@@ -23,12 +23,13 @@ SOCIAL_HOSTS = (
     "oneflare.com.au",
 )
 USER_AGENT = "Mozilla/5.0 (compatible; AceAdsSiteAudit/0.1; +https://aceads.au)"
+BLOCKED_STATUSES = {401, 403, 429}  # bot protection, not a broken site
 PAGESPEED_URL = "https://www.googleapis.com/pagespeedonline/v5/runPagespeed"
 
 
 @dataclass
 class Audit:
-    status: str  # none | social_only | unreachable | ok
+    status: str  # none | social_only | unreachable | blocked | ok
     issues: list[str] = field(default_factory=list)
     load_seconds: float | None = None
     mobile_performance: float | None = None  # PageSpeed score 0-1
@@ -65,12 +66,12 @@ def analyse_html(html: str, final_url: str, load_seconds: float, today: dt.date 
     return issues
 
 
-def pagespeed_score(url: str, api_key: str) -> float | None:
+def pagespeed_score(url: str, api_key: str | None) -> float | None:
     """Mobile Lighthouse performance score (0-1), or None if unavailable."""
     try:
         resp = requests.get(
             PAGESPEED_URL,
-            params={"url": url, "strategy": "mobile", "category": "performance", "key": api_key},
+            params={"url": url, "strategy": "mobile", "category": "performance", **({"key": api_key} if api_key else {})},
             timeout=90,
         )
         resp.raise_for_status()
@@ -88,12 +89,14 @@ def audit_website(url: str, api_key: str | None = None, use_pagespeed: bool = Fa
         start = time.monotonic()
         resp = requests.get(url, headers={"User-Agent": USER_AGENT}, timeout=15)
         load = time.monotonic() - start
+        if resp.status_code in BLOCKED_STATUSES:
+            return Audit(status="blocked", issues=[f"could not check (site refused automated visit, HTTP {resp.status_code})"])
         resp.raise_for_status()
     except requests.RequestException as exc:
         return Audit(status="unreachable", issues=[f"website broken or down ({type(exc).__name__})"])
 
     audit = Audit(status="ok", issues=analyse_html(resp.text, resp.url, load), load_seconds=load)
-    if use_pagespeed and api_key:
+    if use_pagespeed:  # works without a key, at a lower rate limit
         audit.mobile_performance = pagespeed_score(resp.url, api_key)
         if audit.mobile_performance is not None and audit.mobile_performance < 0.5:
             audit.issues.append(f"poor mobile performance (PageSpeed {round(audit.mobile_performance * 100)}/100)")

@@ -1,0 +1,17 @@
+{
+  "area": "Brisbane QLD",
+  "categories": [
+    "plumber",
+    "electrician",
+    "builder",
+    "landscaper",
+    "cleaning service",
+    "physiotherapist",
+    "dentist",
+    "beauty salon",
+    "cafe",
+    "mechanic"
+  ],
+  "min_rating": 3.8,
+  "min_reviews": 5
+}

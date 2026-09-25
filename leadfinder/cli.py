@@ -83,7 +83,7 @@ def main(argv: list[str] | None = None) -> int:
 
     out = Path(args.out or f"output/leads-{dt.date.today():%Y%m%d}.csv")
     out.parent.mkdir(parents=True, exist_ok=True)
-    with out.open("w", newline="", encoding="utf-8") as f:
+    with out.open("w", newline="", encoding="utf-8-sig")  # BOM so Excel shows names correctly as f:
         writer = csv.DictWriter(f, fieldnames=COLUMNS)
         writer.writeheader()
         writer.writerows(rows)

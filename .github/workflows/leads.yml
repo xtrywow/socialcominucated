@@ -8,6 +8,9 @@ on:
     paths: [leads-request.json]
   workflow_dispatch:
 
+permissions:
+  contents: write  # to commit results/ back to the branch
+
 jobs:
   leads:
     runs-on: ubuntu-latest
@@ -28,6 +31,16 @@ jobs:
           echo "===CSV-START==="
           cat output/leads.csv
           echo "===CSV-END==="
+      - name: Commit results to the branch
+        run: |
+          mkdir -p results
+          cp output/leads.csv "results/leads-$(date -u +%Y%m%d).csv"
+          cp output/leads.csv results/leads-latest.csv
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results/
+          git commit -m "Add lead results $(date -u +%Y-%m-%d)" || echo "No changes"
+          git push
       - uses: actions/upload-artifact@v4
         with:
           name: leads

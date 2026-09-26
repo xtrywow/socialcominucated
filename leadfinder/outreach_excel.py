@@ -46,10 +46,11 @@ def opener(row: dict, lead_type: str, platform: str) -> str:
     It offers a free preview rather than claiming one exists: build it only when they say yes.
     """
     name = row["name"]
+    region = row.get("region") or "your area"
     category = CATEGORY_PHRASE.get(row["category"], row["category"])
     hook = "[one real detail from their page]"
     if lead_type == "No own website":
-        problem = (f"noticed that when people in Brisbane search for a {category} on Google, they only find your "
+        problem = (f"noticed that when people in {region} search for a {category} on Google, they only find your "
                    f"{platform}, not a website of your own")
     elif lead_type == "No website found":
         problem = f"couldn't find a website for {name}, only your {platform}"
@@ -61,7 +62,7 @@ def opener(row: dict, lead_type: str, platform: str) -> str:
         problem = "noticed your website is hard to use on a phone"
     else:
         problem = "think your website could be doing more to bring in customers"
-    return (f"Hi {name} team! {hook}. We're AceAds, a Brisbane web studio. We {problem}. "
+    return (f"Hi {name} team! {hook}. We're AceAds, a web design studio. We {problem}. "
             "We'd be happy to make you a free preview of what a website could look like. Want one? No cost, no obligation.")
 
 
@@ -73,18 +74,18 @@ def build(csv_path: Path, out_path: Path) -> int:
             continue
         order, priority, lead_type = classify(r["pitch_angle"])
         platform = "Instagram" if r.get("instagram") else "Facebook"
-        leads.append((order, r["category"], r["name"], priority, lead_type, platform, r))
-    leads.sort(key=lambda x: x[:3])
+        leads.append((order, r.get("region", ""), r["category"], r["name"], priority, lead_type, platform, r))
+    leads.sort(key=lambda x: x[:4])
 
     wb = Workbook()
     ws = wb.active
     ws.title = "Leads"
-    head = ["#", "Priority", "Lead type", "Business", "Category", "DM on", "Instagram", "Facebook", "Phone",
+    head = ["#", "Priority", "Lead type", "Business", "Category", "Region", "DM on", "Instagram", "Facebook", "Phone",
             "Website", "What we found", "Suggested first DM (fill the [bracket] first)", "Check on Google Maps",
             "Status", "Assigned to", "Date contacted", "Follow-up date", "Notes"]
     ws.append(head)
-    for i, (_, _, _, priority, lead_type, platform, r) in enumerate(leads, 1):
-        ws.append([i, priority, lead_type, r["name"], r["category"], platform, r.get("instagram", ""),
+    for i, (_, _, _, _, priority, lead_type, platform, r) in enumerate(leads, 1):
+        ws.append([i, priority, lead_type, r["name"], r["category"], r.get("region", ""), platform, r.get("instagram", ""),
                    r.get("facebook", ""), r["phone"], r["website"], r["pitch_angle"],
                    opener(r, lead_type, platform), r["maps_url"], "Not contacted", "", "", "", ""])
         ws.cell(ws.max_row, 2).fill = PatternFill("solid", fgColor=PRIORITY_FILL[priority])
@@ -93,10 +94,10 @@ def build(csv_path: Path, out_path: Path) -> int:
         cell.font = Font(bold=True, color=WHITE)
         cell.fill = PatternFill("solid", fgColor=NAVY)
         cell.alignment = Alignment(wrap_text=True, vertical="center")
-    widths = [5, 13, 18, 28, 16, 11, 30, 30, 16, 30, 40, 70, 22, 16, 14, 14, 14, 30]
+    widths = [5, 13, 18, 28, 16, 14, 11, 30, 30, 16, 30, 40, 70, 22, 16, 14, 14, 14, 30]
     for i, w in enumerate(widths, 1):
         ws.column_dimensions[get_column_letter(i)].width = w
-    link_cols = {7: None, 8: None, 10: None, 13: "Open map"}
+    link_cols = {8: None, 9: None, 11: None, 14: "Open map"}
     for row in ws.iter_rows(min_row=2):
         for c in row:
             c.alignment = Alignment(wrap_text=True, vertical="top")
@@ -110,21 +111,21 @@ def build(csv_path: Path, out_path: Path) -> int:
     last = ws.max_row
     status = DataValidation(type="list", formula1='"' + ",".join(STATUSES) + '"', allow_blank=True)
     ws.add_data_validation(status)
-    status.add(f"N2:N{last}")
+    status.add(f"O2:O{last}")
     dates = DataValidation(type="date", allow_blank=True)
     ws.add_data_validation(dates)
-    dates.add(f"P2:Q{last}")
+    dates.add(f"Q2:R{last}")
     for value, colour in [("Won", "A9D08E"), ("Meeting booked", "C6EFCE"), ("Replied", "FFEB9C"),
                           ("Not interested", "D9D9D9"), ("Business closed", "D9D9D9")]:
-        ws.conditional_formatting.add(f"A2:R{last}", FormulaRule(formula=[f'$N2="{value}"'],
+        ws.conditional_formatting.add(f"A2:S{last}", FormulaRule(formula=[f'$O2="{value}"'],
                                                                   fill=PatternFill("solid", fgColor=colour)))
     ws.freeze_panes = "E2"
-    ws.auto_filter.ref = f"A1:R{last}"
+    ws.auto_filter.ref = f"A1:S{last}"
 
     dash = wb.create_sheet("Tracker")
     dash.append(["Pipeline", "Leads"])
     for s in STATUSES:
-        dash.append([s, f'=COUNTIF(Leads!N:N,"{s}")'])
+        dash.append([s, f'=COUNTIF(Leads!O:O,"{s}")'])
     dash.append([])
     dash.append(["Reply rate (Replied or later / DMs sent)",
                  '=IFERROR((B4+B5+B6+B7+B8)/(B3+B4+B5+B6+B7+B8),0)'])
@@ -132,6 +133,11 @@ def build(csv_path: Path, out_path: Path) -> int:
     dash.append(["Leads per priority", ""])
     for p in PRIORITY_FILL:
         dash.append([p, f'=COUNTIF(Leads!B:B,"{p}")'])
+    dash.append([])
+    dash.append(["Leads per region", ""])
+    dash.cell(dash.max_row, 1).font = Font(bold=True)
+    for region in sorted({r.get("region", "") for *_, r in leads} - {""}):
+        dash.append([region, f'=COUNTIF(Leads!F:F,"{region}")'])
     for cell in dash[1]:
         cell.font = Font(bold=True, color=WHITE)
         cell.fill = PatternFill("solid", fgColor=NAVY)

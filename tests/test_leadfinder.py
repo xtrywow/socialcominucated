@@ -257,7 +257,7 @@ def test_outreach_workbook(tmp_path):
 
     base = dict.fromkeys(COLUMNS, "")
     rows = [
-        {**base, "name": "Insta Cafe", "category": "cafe", "pitch_angle": "no real website (uses www.instagram.com)",
+        {**base, "name": "Insta Cafe", "category": "cafe", "region": "Gold Coast", "pitch_angle": "no real website (uses www.instagram.com)",
          "instagram": "https://www.instagram.com/ic", "maps_url": "https://maps.example"},
         {**base, "name": "Old Site Dental", "category": "dentist", "pitch_angle": "security certificate error (x)",
          "facebook": "https://facebook.com/osd"},
@@ -272,7 +272,35 @@ def test_outreach_workbook(tmp_path):
     wb = load_workbook(tmp_path / "out.xlsx")
     ws = wb["Leads"]
     assert [ws.cell(r, 4).value for r in (2, 3)] == ["Insta Cafe", "Old Site Dental"]
-    assert ws.cell(2, 6).value == "Instagram" and ws.cell(3, 6).value == "Facebook"
-    assert "only find your Instagram" in ws.cell(2, 12).value and "[one real detail" in ws.cell(2, 12).value
-    assert "make you a free preview" in ws.cell(2, 12).value
+    assert ws.cell(2, 7).value == "Instagram" and ws.cell(3, 7).value == "Facebook"
+    assert "people in Gold Coast search" in ws.cell(2, 13).value and "[one real detail" in ws.cell(2, 13).value
+    assert "make you a free preview" in ws.cell(2, 13).value
     assert wb["Tracker"]["A11"].value.startswith("Reply rate")
+
+
+def test_regions_and_merge(monkeypatch, tmp_path):
+    import csv
+    import json
+
+    from leadfinder import cli, osm
+    from leadfinder.merge import merge
+    from leadfinder.places import Business
+
+    config = {"area": "Brisbane QLD", "categories": ["cafe"], "osm_tags": {"cafe": ["x"]},
+              "regions": {"Cairns": [0, 0, 1, 1], "Mackay": [1, 1, 2, 2]}}
+    (tmp_path / "config.json").write_text(json.dumps(config))
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.delenv("GOOGLE_API_KEY", raising=False)
+    seen_bboxes = []
+
+    def fake_search(c, t, bbox):
+        seen_bboxes.append(bbox)
+        return [Business(f"osm:node/{bbox[0]}", f"Cafe {bbox[0]}", c, "", "", "https://facebook.com/x", 0.0, 0, "")]
+
+    monkeypatch.setattr(osm, "search", fake_search)
+    assert cli.main(["--out", "a.csv", "--regions", "Cairns"]) == 0
+    assert cli.main(["--out", "b.csv", "--regions", "Cairns", "Mackay"]) == 0
+    assert seen_bboxes == [[0, 0, 1, 1], [0, 0, 1, 1], [1, 1, 2, 2]]
+    assert merge([tmp_path / "a.csv", tmp_path / "b.csv"], tmp_path / "all.csv") == 2
+    rows = list(csv.DictReader(open(tmp_path / "all.csv", encoding="utf-8-sig")))
+    assert sorted(r["region"] for r in rows) == ["Cairns", "Mackay"]

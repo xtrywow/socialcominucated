@@ -19,7 +19,7 @@ from .audit import Audit, audit_website, is_excluded
 from .scoring import MAX_GAP, demand_score, gap_score, tier
 
 COLUMNS = [
-    "score", "tier", "name", "category", "pitch_angle", "instagram", "facebook", "phone", "website",
+    "score", "tier", "name", "category", "region", "pitch_angle", "instagram", "facebook", "phone", "website",
     "rating", "reviews", "address", "maps_url", "place_id",
 ]
 
@@ -40,6 +40,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     p.add_argument("--limit", type=int, default=0, help="max businesses to audit (0 = all)")
     p.add_argument("--pagespeed", action="store_true", help="also run Google PageSpeed (slow, more accurate)")
     p.add_argument("--min-tier", choices=["A", "B", "C"], default="C", help="only export this tier or better")
+    p.add_argument("--regions", nargs="+", help="OSM regions from config.json (default: osm_bbox as 'Brisbane')")
     p.add_argument("--require-social", action="store_true", help="only export leads with an Instagram or Facebook link")
     p.add_argument("--source", choices=["google", "osm"], help="default: google if GOOGLE_API_KEY is set, else osm")
     p.add_argument("--out", help="CSV output path")
@@ -59,22 +60,30 @@ def main(argv: list[str] | None = None) -> int:
     categories = args.categories or config["categories"]
     print(f"Source: {source}", file=sys.stderr)
 
+    regions = (
+        {name: config["regions"][name] for name in args.regions}
+        if args.regions else {config.get("area", "Brisbane").split()[0]: config.get("osm_bbox")}
+    )
     seen: dict[str, places.Business] = {}
-    for category in categories:
+    for (region, bbox), category in (
+        [(r, c) for r in regions.items() for c in categories] if source == "osm"
+        else [((config["area"], None), c) for c in categories]
+    ):
         try:
             if source == "google":
                 found = places.search(api_key, category, config["area"])
             elif category in config["osm_tags"]:
-                found = osm.search(category, config["osm_tags"][category], config["osm_bbox"])
+                found = osm.search(category, config["osm_tags"][category], bbox)
                 time.sleep(2)  # be polite to the free Overpass servers
             else:
-                print(f"{category}: no OSM tags in config, skipped", file=sys.stderr)
+                print(f"{region} / {category}: no OSM tags in config, skipped", file=sys.stderr)
                 continue
         except (requests.RequestException, RuntimeError) as exc:
-            print(f"{category}: search failed, skipped ({exc})", file=sys.stderr)
+            print(f"{region} / {category}: search failed, skipped ({exc})", file=sys.stderr)
             continue
-        print(f"{category}: {len(found)} businesses", file=sys.stderr)
+        print(f"{region} / {category}: {len(found)} businesses", file=sys.stderr)
         for b in found:
+            b.region = region
             seen.setdefault(b.place_id, b)
 
     candidates = [b for b in seen.values() if not is_excluded(b.website)]
@@ -110,7 +119,7 @@ def main(argv: list[str] | None = None) -> int:
         facebook = b.facebook or audit.facebook or (b.website if "facebook.com" in b.website else "")
         instagram = b.instagram or audit.instagram or (b.website if "instagram.com" in b.website else "")
         rows.append({
-            "score": score, "tier": tier(score), "name": b.name, "category": b.category,
+            "score": score, "tier": tier(score), "name": b.name, "category": b.category, "region": b.region,
             "pitch_angle": "; ".join(audit.issues), "instagram": instagram, "facebook": facebook,
             "phone": b.phone, "website": b.website,
             "rating": b.rating, "reviews": b.reviews, "address": b.address,

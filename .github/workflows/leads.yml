@@ -1,6 +1,7 @@
 # Runs the lead finder on GitHub's servers (which have open internet access).
-# Edit leads-request.json and push to start a run; results are committed to
-# results/ on the branch and uploaded as an artifact.
+# Edit leads-request.json and push to start a run. Each region runs as its own
+# parallel job; a final job merges them, builds the outreach workbook and
+# commits everything to results/ on the branch.
 name: Find leads
 
 on:
@@ -12,9 +13,24 @@ permissions:
   contents: write  # to commit results/ back to the branch
 
 jobs:
-  leads:
+  plan:
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    outputs:
+      regions: ${{ steps.read.outputs.regions }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: read
+        run: echo "regions=$(python3 -c "import json; print(json.dumps(json.load(open('leads-request.json')).get('regions', ['Brisbane'])))")" >> "$GITHUB_OUTPUT"
+
+  leads:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    strategy:
+      fail-fast: false
+      max-parallel: 4  # stay polite to the free Overpass servers
+      matrix:
+        region: ${{ fromJson(needs.plan.outputs.regions) }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -25,22 +41,42 @@ jobs:
       - name: Run lead finder
         env:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          REGION: ${{ matrix.region }}
         run: |
-          ARGS=$(python -c "import json,shlex; r=json.load(open('leads-request.json')); a=['--source',r['source'],'--limit',str(r.get('limit',0)),'--min-tier',r.get('min_tier','C'),'--out','output/leads.csv','--categories',*r['categories']]; a+=['--pagespeed'] if r.get('pagespeed') else []; a+=['--require-social'] if r.get('require_social') else []; print(shlex.join(a))")
+          ARGS=$(python -c "import json,os,shlex; r=json.load(open('leads-request.json')); a=['--source',r['source'],'--limit',str(r.get('limit',0)),'--min-tier',r.get('min_tier','C'),'--out','output/leads.csv','--regions',os.environ['REGION'],'--categories',*r['categories']]; a+=['--pagespeed'] if r.get('pagespeed') else []; a+=['--require-social'] if r.get('require_social') else []; print(shlex.join(a))")
           eval python -m leadfinder $ARGS
-          echo "Top of results:"
-          head -n 5 output/leads.csv
-      - name: Commit results to the branch
+      - name: Name the file after the region
+        run: echo "SLUG=$(echo '${{ matrix.region }}' | tr 'A-Z ' 'a-z-')" >> "$GITHUB_ENV"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: leads-${{ env.SLUG }}
+          path: output/leads.csv
+
+  merge:
+    needs: leads
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: leads-*
+          path: parts
+      - name: Merge regions and build the workbook
         run: |
           mkdir -p results
-          cp output/leads.csv "results/leads-$(date -u +%Y%m%d).csv"
-          cp output/leads.csv results/leads-latest.csv
+          python -m leadfinder.merge results/leads-latest.csv parts/*/leads.csv
+          cp results/leads-latest.csv "results/leads-$(date -u +%Y%m%d).csv"
+          WORKBOOK=$(python -c "import json; print(json.load(open('leads-request.json')).get('workbook', 'results/AceAds-DM-outreach.xlsx'))")
+          python -m leadfinder.outreach_excel results/leads-latest.csv "$WORKBOOK"
+      - name: Commit results to the branch
+        run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add results/
           git commit -m "Add lead results $(date -u +%Y-%m-%d)" || echo "No changes"
           git pull --rebase origin "$GITHUB_REF_NAME" && git push
-      - uses: actions/upload-artifact@v4
-        with:
-          name: leads
-          path: output/leads.csv

@@ -38,6 +38,7 @@ class Business:
     maps_url: str
     facebook: str = ""
     instagram: str = ""
+    region: str = ""
 
 
 def parse_place(place: dict, category: str) -> Business | None:

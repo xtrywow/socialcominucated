@@ -146,8 +146,10 @@ def build(csv_path: Path, out_path: Path) -> int:
     dash.column_dimensions["B"].width = 12
 
     rules = wb.create_sheet("How to work this list")
+    regions = sorted({r.get("region", "") for *_, r in leads} - {""})
+    area = ", ".join(regions) if 0 < len(regions) <= 3 else "Queensland" if regions else "Brisbane"
     lines = [
-        ("AceAds: Instagram / Facebook outreach, Brisbane", True),
+        (f"AceAds: Instagram / Facebook outreach, {area}", True),
         ("", False),
         ("Before each DM", True),
         ("1. Open 'Check on Google Maps'. Skip the business if it is closed or has almost no reviews.", False),

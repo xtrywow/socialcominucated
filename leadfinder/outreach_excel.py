@@ -22,8 +22,10 @@ PRIORITY_FILL = {"HIGH": "C6EFCE", "VERIFY FIRST": "FFEB9C", "MEDIUM": "DDEBF7"}
 
 def classify(pitch: str) -> tuple[int, str, str]:
     """(sort order, priority, lead type) from the audit finding."""
-    if pitch.startswith(("no real website", "no website listed, only social")):
+    if pitch.startswith("no real website"):
         return 1, "HIGH", "No own website"
+    if pitch.startswith("no website listed, only social"):
+        return 3, "VERIFY FIRST", "No website found"
     if pitch.startswith("security certificate"):
         return 2, "HIGH", "'Not secure' warning"
     if pitch.startswith(("homepage shows an error", "website broken")):
@@ -31,23 +33,36 @@ def classify(pitch: str) -> tuple[int, str, str]:
     return 4, "MEDIUM", "Weak website"
 
 
+CATEGORY_PHRASE = {
+    "barber or hairdresser": "hairdresser", "bar or pub": "bar", "deli or specialty food": "local food store",
+    "gift or homewares": "gift shop", "gym or studio": "gym", "massage or spa": "massage", "pet business": "pet shop",
+    "allied health": "health practitioner", "trades": "tradie", "takeaway": "takeaway",
+}
+
+
 def opener(row: dict, lead_type: str, platform: str) -> str:
-    """First DM, with a slot the team must fill with one real detail from the profile."""
-    name, category = row["name"], row["category"]
+    """First DM, with a slot the team must fill with one real detail from the profile.
+
+    It offers a free preview rather than claiming one exists: build it only when they say yes.
+    """
+    name = row["name"]
+    category = CATEGORY_PHRASE.get(row["category"], row["category"])
     hook = "[one real detail from their page]"
     if lead_type == "No own website":
-        problem = (f"when people in Brisbane search for a {category} on Google, they only find your {platform}, "
-                   "not a website of your own")
+        problem = (f"noticed that when people in Brisbane search for a {category} on Google, they only find your "
+                   f"{platform}, not a website of your own")
+    elif lead_type == "No website found":
+        problem = f"couldn't find a website for {name}, only your {platform}"
     elif lead_type == "'Not secure' warning":
-        problem = "your website shows a 'Not secure' warning when it's opened on a phone"
+        problem = "noticed your website shows a 'Not secure' warning when it's opened on a phone"
     elif lead_type == "Site shows an error":
-        problem = "your website was showing an error page when we tried it"
+        problem = "noticed your website was showing an error page when we tried it"
     elif "not mobile-friendly" in row["pitch_angle"]:
-        problem = "your website is hard to use on a phone"
+        problem = "noticed your website is hard to use on a phone"
     else:
-        problem = "your website could be doing more to bring in customers"
-    return (f"Hi {name} team! {hook}. We're AceAds, a Brisbane web studio. We noticed {problem}. "
-            "We made a quick preview of what a new site could look like for you. Happy to send it over? No cost to look.")
+        problem = "think your website could be doing more to bring in customers"
+    return (f"Hi {name} team! {hook}. We're AceAds, a Brisbane web studio. We {problem}. "
+            "We'd be happy to make you a free preview of what a website could look like. Want one? No cost, no obligation.")
 
 
 def build(csv_path: Path, out_path: Path) -> int:
@@ -131,12 +146,14 @@ def build(csv_path: Path, out_path: Path) -> int:
         ("Before each DM", True),
         ("1. Open 'Check on Google Maps'. Skip the business if it is closed or has almost no reviews.", False),
         ("2. Open their Instagram/Facebook. Replace [one real detail from their page] with something true and specific.", False),
-        ("3. 'VERIFY FIRST' rows: open their website on your phone. Only mention a problem you can see yourself.", False),
+        ("3. 'VERIFY FIRST' rows: Google the business name first. If they DO have a website, check it on your phone and", False),
+        ("   rewrite the DM around a problem you can see yourself, or skip them. Never say they have no website unless you checked.", False),
         ("", False),
         ("Sending", True),
         ("4. Send from the AceAds business account, by hand. Max 20 new DMs per account per day.", False),
         ("5. Never paste the identical message twice in a row. Personalise every one; Meta limits accounts that send copy-paste DMs.", False),
-        ("6. If they reply yes, send the preview screenshot and link. Then set Status to 'Preview sent'.", False),
+        ("6. If they reply yes, ask AceAds for their preview (mockups/ in the repo), then send the screenshot and link.", False),
+        ("   Set Status to 'Preview sent'.", False),
         ("7. One polite follow-up after 4-5 days, only if there was no reply. Then stop.", False),
         ("8. If anyone says no or asks us to stop, set 'Not interested' and never contact them again.", False),
         ("", False),

@@ -274,4 +274,5 @@ def test_outreach_workbook(tmp_path):
     assert [ws.cell(r, 4).value for r in (2, 3)] == ["Insta Cafe", "Old Site Dental"]
     assert ws.cell(2, 6).value == "Instagram" and ws.cell(3, 6).value == "Facebook"
     assert "only find your Instagram" in ws.cell(2, 12).value and "[one real detail" in ws.cell(2, 12).value
+    assert "make you a free preview" in ws.cell(2, 12).value
     assert wb["Tracker"]["A11"].value.startswith("Reply rate")

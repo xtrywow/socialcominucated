@@ -39,7 +39,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add results/
           git commit -m "Add lead results $(date -u +%Y-%m-%d)" || echo "No changes"
-          git push
+          git pull --rebase origin "$GITHUB_REF_NAME" && git push
       - uses: actions/upload-artifact@v4
         with:
           name: leads

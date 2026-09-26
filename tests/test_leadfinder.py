@@ -245,3 +245,33 @@ def test_require_social_and_social_listed(monkeypatch, tmp_path):
         ("FB Site", "A", "https://facebook.com/fbs", ""),
         ("Insta Only", "B", "", "https://www.instagram.com/io"),
     ]
+
+
+def test_outreach_workbook(tmp_path):
+    import csv
+
+    from openpyxl import load_workbook
+
+    from leadfinder.cli import COLUMNS
+    from leadfinder.outreach_excel import build
+
+    base = dict.fromkeys(COLUMNS, "")
+    rows = [
+        {**base, "name": "Insta Cafe", "category": "cafe", "pitch_angle": "no real website (uses www.instagram.com)",
+         "instagram": "https://www.instagram.com/ic", "maps_url": "https://maps.example"},
+        {**base, "name": "Old Site Dental", "category": "dentist", "pitch_angle": "security certificate error (x)",
+         "facebook": "https://facebook.com/osd"},
+        {**base, "name": "No Handle", "category": "cafe", "pitch_angle": "no real website (uses x)"},
+    ]
+    src = tmp_path / "leads.csv"
+    with open(src, "w", newline="", encoding="utf-8-sig") as f:
+        w = csv.DictWriter(f, fieldnames=COLUMNS)
+        w.writeheader()
+        w.writerows(rows)
+    assert build(src, tmp_path / "out.xlsx") == 2
+    wb = load_workbook(tmp_path / "out.xlsx")
+    ws = wb["Leads"]
+    assert [ws.cell(r, 4).value for r in (2, 3)] == ["Insta Cafe", "Old Site Dental"]
+    assert ws.cell(2, 6).value == "Instagram" and ws.cell(3, 6).value == "Facebook"
+    assert "only find your Instagram" in ws.cell(2, 12).value and "[one real detail" in ws.cell(2, 12).value
+    assert wb["Tracker"]["A11"].value.startswith("Reply rate")

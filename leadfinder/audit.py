@@ -40,6 +40,24 @@ class Audit:
     issues: list[str] = field(default_factory=list)
     load_seconds: float | None = None
     mobile_performance: float | None = None  # PageSpeed score 0-1
+    facebook: str = ""
+    instagram: str = ""
+
+
+SOCIAL_LINK = re.compile(
+    r"""href=["'](https?://(?:www\.|m\.)?(facebook|instagram)\.com/[^"'?#\s]+)""", re.IGNORECASE
+)
+NOT_A_PROFILE = ("/sharer", "/share", "/plugins", "/tr", "/dialog", "/p/", "/reel/", "/explore/", "/policies")
+
+
+def find_social_links(html_text: str) -> dict[str, str]:
+    """First Facebook and Instagram profile links on a page."""
+    found: dict[str, str] = {}
+    for url, site in SOCIAL_LINK.findall(html_text):
+        site = site.lower()
+        if site not in found and not any(part in url.lower() for part in NOT_A_PROFILE):
+            found[site] = url.rstrip("/")
+    return found
 
 
 def is_social_only(url: str) -> bool:
@@ -135,6 +153,8 @@ def audit_website(url: str, api_key: str | None = None, use_pagespeed: bool = Fa
     if looks_like_bot_challenge(resp.text):
         return Audit(status="blocked", issues=["could not check (site served a bot-protection page)"])
     audit = Audit(status="ok", issues=analyse_html(resp.text, resp.url, load), load_seconds=load)
+    socials = find_social_links(resp.text)
+    audit.facebook, audit.instagram = socials.get("facebook", ""), socials.get("instagram", "")
     if use_pagespeed:  # works without a key, at a lower rate limit
         audit.mobile_performance = pagespeed_score(resp.url, api_key)
         if audit.mobile_performance is not None and audit.mobile_performance < 0.5:

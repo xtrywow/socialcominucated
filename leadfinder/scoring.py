@@ -14,6 +14,7 @@ from .audit import Audit
 GAP_BY_STATUS = {
     "none": 35,
     "unknown": 15,  # OSM lists no website: unverified
+    "social_listed": 35,  # no website listed, but a Facebook/Instagram profile is
     "social_only": 45,
     "ssl_error": 40,
     "dead": 20,  # domain not working: often the business has closed

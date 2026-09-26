@@ -19,7 +19,7 @@ from .audit import Audit, audit_website, is_excluded
 from .scoring import MAX_GAP, demand_score, gap_score, tier
 
 COLUMNS = [
-    "score", "tier", "name", "category", "pitch_angle", "phone", "website",
+    "score", "tier", "name", "category", "pitch_angle", "instagram", "facebook", "phone", "website",
     "rating", "reviews", "address", "maps_url", "place_id",
 ]
 
@@ -40,6 +40,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     p.add_argument("--limit", type=int, default=0, help="max businesses to audit (0 = all)")
     p.add_argument("--pagespeed", action="store_true", help="also run Google PageSpeed (slow, more accurate)")
     p.add_argument("--min-tier", choices=["A", "B", "C"], default="C", help="only export this tier or better")
+    p.add_argument("--require-social", action="store_true", help="only export leads with an Instagram or Facebook link")
     p.add_argument("--source", choices=["google", "osm"], help="default: google if GOOGLE_API_KEY is set, else osm")
     p.add_argument("--out", help="CSV output path")
     return p.parse_args(argv)
@@ -91,11 +92,13 @@ def main(argv: list[str] | None = None) -> int:
     def run_audit(b: places.Business) -> Audit:
         if source == "osm" and not b.website:
             # OSM often just lacks the website tag; don't claim the business has none.
+            if b.facebook or b.instagram:
+                return Audit(status="social_listed", issues=["no website listed, only social media (verify on Google Maps)"])
             return Audit(status="unknown", issues=["no website listed on OpenStreetMap (verify on Google Maps)"])
         return audit_website(b.website, api_key, args.pagespeed)
 
     print(f"Auditing {len(candidates)} businesses...", file=sys.stderr)
-    with ThreadPoolExecutor(max_workers=4 if args.pagespeed else 16) as pool:
+    with ThreadPoolExecutor(max_workers=4 if args.pagespeed else 32) as pool:
         audits = list(pool.map(run_audit, candidates))
 
     rows = []
@@ -104,14 +107,19 @@ def main(argv: list[str] | None = None) -> int:
             score = demand_score(b.rating, b.reviews) + gap_score(audit)
         else:  # no demand data: scale the website gap to 0-100
             score = round(gap_score(audit) * 100 / MAX_GAP)
+        facebook = b.facebook or audit.facebook or (b.website if "facebook.com" in b.website else "")
+        instagram = b.instagram or audit.instagram or (b.website if "instagram.com" in b.website else "")
         rows.append({
             "score": score, "tier": tier(score), "name": b.name, "category": b.category,
-            "pitch_angle": "; ".join(audit.issues), "phone": b.phone, "website": b.website,
+            "pitch_angle": "; ".join(audit.issues), "instagram": instagram, "facebook": facebook,
+            "phone": b.phone, "website": b.website,
             "rating": b.rating, "reviews": b.reviews, "address": b.address,
             "maps_url": b.maps_url, "place_id": b.place_id,
         })
 
     rows = [r for r in rows if r["tier"] <= args.min_tier]
+    if args.require_social:
+        rows = [r for r in rows if r["instagram"] or r["facebook"]]
     rows.sort(key=lambda r: r["score"], reverse=True)
 
     out = Path(args.out or f"output/leads-{dt.date.today():%Y%m%d}.csv")

@@ -36,6 +36,8 @@ class Business:
     rating: float
     reviews: int
     maps_url: str
+    facebook: str = ""
+    instagram: str = ""
 
 
 def parse_place(place: dict, category: str) -> Business | None:

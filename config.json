@@ -14,17 +14,135 @@
   ],
   "min_rating": 3.8,
   "min_reviews": 5,
-  "osm_bbox": [-27.70, 152.80, -27.20, 153.25],
+  "osm_bbox": [
+    -27.7,
+    152.8,
+    -27.2,
+    153.25
+  ],
   "osm_tags": {
-    "plumber": ["\"craft\"=\"plumber\""],
-    "electrician": ["\"craft\"=\"electrician\""],
-    "builder": ["\"craft\"=\"builder\"", "\"craft\"=\"carpenter\"", "\"craft\"=\"roofer\""],
-    "landscaper": ["\"craft\"=\"gardener\"", "\"shop\"=\"garden_centre\""],
-    "cleaning service": ["\"craft\"=\"cleaning\"", "\"shop\"=\"dry_cleaning\""],
-    "physiotherapist": ["\"healthcare\"=\"physiotherapist\""],
-    "dentist": ["\"amenity\"=\"dentist\""],
-    "beauty salon": ["\"shop\"=\"beauty\"", "\"shop\"=\"hairdresser\""],
-    "cafe": ["\"amenity\"=\"cafe\""],
-    "mechanic": ["\"shop\"=\"car_repair\"", "\"shop\"=\"tyres\""]
+    "plumber": [
+      "\"craft\"=\"plumber\""
+    ],
+    "electrician": [
+      "\"craft\"=\"electrician\""
+    ],
+    "builder": [
+      "\"craft\"=\"builder\"",
+      "\"craft\"=\"carpenter\"",
+      "\"craft\"=\"roofer\""
+    ],
+    "landscaper": [
+      "\"craft\"=\"gardener\"",
+      "\"shop\"=\"garden_centre\""
+    ],
+    "cleaning service": [
+      "\"craft\"=\"cleaning\"",
+      "\"shop\"=\"dry_cleaning\""
+    ],
+    "physiotherapist": [
+      "\"healthcare\"=\"physiotherapist\""
+    ],
+    "dentist": [
+      "\"amenity\"=\"dentist\""
+    ],
+    "beauty salon": [
+      "\"shop\"=\"beauty\"",
+      "\"shop\"=\"cosmetics\""
+    ],
+    "cafe": [
+      "\"amenity\"=\"cafe\""
+    ],
+    "mechanic": [
+      "\"shop\"=\"car_repair\"",
+      "\"shop\"=\"tyres\""
+    ],
+    "restaurant": [
+      "\"amenity\"=\"restaurant\""
+    ],
+    "takeaway": [
+      "\"amenity\"=\"fast_food\""
+    ],
+    "bar or pub": [
+      "\"amenity\"=\"bar\"",
+      "\"amenity\"=\"pub\""
+    ],
+    "bakery": [
+      "\"shop\"=\"bakery\"",
+      "\"shop\"=\"pastry\"",
+      "\"shop\"=\"confectionery\""
+    ],
+    "barber or hairdresser": [
+      "\"shop\"=\"hairdresser\""
+    ],
+    "massage or spa": [
+      "\"shop\"=\"massage\"",
+      "\"leisure\"=\"spa\""
+    ],
+    "gym or studio": [
+      "\"leisure\"=\"fitness_centre\"",
+      "\"sport\"=\"yoga\"",
+      "\"sport\"=\"pilates\""
+    ],
+    "florist": [
+      "\"shop\"=\"florist\""
+    ],
+    "boutique": [
+      "\"shop\"=\"clothes\"",
+      "\"shop\"=\"shoes\"",
+      "\"shop\"=\"jewelry\"",
+      "\"shop\"=\"bag\""
+    ],
+    "gift or homewares": [
+      "\"shop\"=\"gift\"",
+      "\"shop\"=\"interior_decoration\"",
+      "\"shop\"=\"furniture\"",
+      "\"shop\"=\"art\""
+    ],
+    "pet business": [
+      "\"shop\"=\"pet\"",
+      "\"shop\"=\"pet_grooming\"",
+      "\"amenity\"=\"veterinary\""
+    ],
+    "tattoo studio": [
+      "\"shop\"=\"tattoo\""
+    ],
+    "photographer": [
+      "\"craft\"=\"photographer\"",
+      "\"shop\"=\"photo\""
+    ],
+    "real estate agent": [
+      "\"office\"=\"estate_agent\""
+    ],
+    "childcare": [
+      "\"amenity\"=\"childcare\"",
+      "\"amenity\"=\"kindergarten\""
+    ],
+    "optometrist": [
+      "\"shop\"=\"optician\"",
+      "\"healthcare\"=\"optometrist\""
+    ],
+    "allied health": [
+      "\"healthcare\"=\"psychotherapist\"",
+      "\"healthcare\"=\"podiatrist\"",
+      "\"healthcare\"=\"chiropractor\"",
+      "\"healthcare\"=\"alternative\""
+    ],
+    "trades": [
+      "\"craft\"=\"plumber\"",
+      "\"craft\"=\"electrician\"",
+      "\"craft\"=\"builder\"",
+      "\"craft\"=\"carpenter\"",
+      "\"craft\"=\"painter\"",
+      "\"craft\"=\"roofer\"",
+      "\"craft\"=\"tiler\""
+    ],
+    "deli or specialty food": [
+      "\"shop\"=\"deli\"",
+      "\"shop\"=\"butcher\"",
+      "\"shop\"=\"greengrocer\"",
+      "\"shop\"=\"wine\"",
+      "\"shop\"=\"coffee\""
+    ]
   }
 }

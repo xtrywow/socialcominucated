@@ -1,6 +1,6 @@
 # Runs the lead finder on GitHub's servers (which have open internet access).
-# Edit leads-request.json and push to start a run; results are printed to the
-# job log between CSV markers and uploaded as an artifact.
+# Edit leads-request.json and push to start a run; results are committed to
+# results/ on the branch and uploaded as an artifact.
 name: Find leads
 
 on:
@@ -14,7 +14,7 @@ permissions:
 jobs:
   leads:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -26,11 +26,10 @@ jobs:
         env:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
         run: |
-          ARGS=$(python -c "import json,shlex; r=json.load(open('leads-request.json')); a=['--source',r['source'],'--limit',str(r.get('limit',0)),'--min-tier',r.get('min_tier','C'),'--out','output/leads.csv','--categories',*r['categories']]; a+=['--pagespeed'] if r.get('pagespeed') else []; print(shlex.join(a))")
+          ARGS=$(python -c "import json,shlex; r=json.load(open('leads-request.json')); a=['--source',r['source'],'--limit',str(r.get('limit',0)),'--min-tier',r.get('min_tier','C'),'--out','output/leads.csv','--categories',*r['categories']]; a+=['--pagespeed'] if r.get('pagespeed') else []; a+=['--require-social'] if r.get('require_social') else []; print(shlex.join(a))")
           eval python -m leadfinder $ARGS
-          echo "===CSV-START==="
-          cat output/leads.csv
-          echo "===CSV-END==="
+          echo "Top of results:"
+          head -n 5 output/leads.csv
       - name: Commit results to the branch
         run: |
           mkdir -p results

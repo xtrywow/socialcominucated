@@ -207,3 +207,41 @@ def test_url_without_scheme_and_booking_pages(monkeypatch):
     assert seen == ["http://www.milanigelato.com.au"]
     assert audit_website("https://tommytwoblades.gettimely.com/#home").status == "social_only"
     assert audit_website("https://petersandko.wixsite.com/nowhere").status == "social_only"
+
+
+def test_social_links_and_chains():
+    from leadfinder.audit import find_social_links
+    from leadfinder.osm import parse_element
+
+    page = ('<a href="https://www.facebook.com/sharer/sharer.php?u=x">share</a>'
+            '<a href="https://www.facebook.com/bestcafe/">fb</a><a href="https://instagram.com/bestcafe">ig</a>')
+    assert find_social_links(page) == {"facebook": "https://www.facebook.com/bestcafe", "instagram": "https://instagram.com/bestcafe"}
+
+    el = {"type": "node", "id": 1, "tags": {"name": "Bean", "contact:instagram": "@beanbne", "facebook": "https://facebook.com/bean"}}
+    b = parse_element(el, "cafe")
+    assert b.instagram == "https://www.instagram.com/beanbne" and b.facebook == "https://facebook.com/bean"
+    assert parse_element({"type": "node", "id": 2, "tags": {"name": "Starbucks", "brand:wikidata": "Q37158"}}, "cafe") is None
+
+
+def test_require_social_and_social_listed(monkeypatch, tmp_path):
+    import csv
+    import json
+
+    from leadfinder import cli, osm
+    from leadfinder.places import Business
+
+    config = {"area": "Brisbane", "categories": ["cafe"], "osm_bbox": [0, 0, 1, 1], "osm_tags": {"cafe": ["x"]}}
+    (tmp_path / "config.json").write_text(json.dumps(config))
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.delenv("GOOGLE_API_KEY", raising=False)
+    monkeypatch.setattr(osm, "search", lambda c, t, b: [
+        Business("osm:node/1", "Insta Only", c, "", "", "", 0.0, 0, "", instagram="https://www.instagram.com/io"),
+        Business("osm:node/2", "FB Site", c, "", "", "https://facebook.com/fbs", 0.0, 0, ""),
+        Business("osm:node/3", "Nothing Known", c, "", "", "", 0.0, 0, ""),
+    ])
+    assert cli.main(["--out", "leads.csv", "--require-social"]) == 0
+    rows = list(csv.DictReader(open(tmp_path / "leads.csv", encoding="utf-8-sig")))
+    assert [(r["name"], r["tier"], r["facebook"], r["instagram"]) for r in rows] == [
+        ("FB Site", "A", "https://facebook.com/fbs", ""),
+        ("Insta Only", "B", "", "https://www.instagram.com/io"),
+    ]

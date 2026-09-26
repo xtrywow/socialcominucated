@@ -33,11 +33,23 @@ def google_maps_search_url(name: str, address: str) -> str:
     return "https://www.google.com/maps/search/?api=1&query=" + quote_plus(f"{name} {address}".strip())
 
 
+def social_url(value: str, host: str) -> str:
+    """OSM stores social links as URLs or bare handles; normalise to a URL."""
+    value = value.strip()
+    if not value:
+        return ""
+    if value.startswith("http"):
+        return value
+    return f"https://www.{host}/{value.lstrip('@')}"
+
+
 def parse_element(element: dict, category: str) -> Business | None:
     t = element.get("tags", {})
     name = t.get("name")
     if not name or t.get("disused") == "yes":
         return None
+    if t.get("brand:wikidata") or t.get("brand:wikipedia"):
+        return None  # chains and franchises buy websites centrally, not per store
     address = " ".join(
         part for part in [t.get("addr:housenumber"), t.get("addr:street"), t.get("addr:suburb") or t.get("addr:city")] if part
     )
@@ -51,6 +63,8 @@ def parse_element(element: dict, category: str) -> Business | None:
         rating=0.0,
         reviews=0,
         maps_url=google_maps_search_url(name, address),
+        facebook=social_url(t.get("contact:facebook") or t.get("facebook", ""), "facebook.com"),
+        instagram=social_url(t.get("contact:instagram") or t.get("instagram", ""), "instagram.com"),
     )
 
 

@@ -39,7 +39,7 @@ CATEGORY_PHRASE = {
     "allied health": "health practitioner", "trades": "tradie", "takeaway": "takeaway",
     "wedding photo or video": "wedding photographer",
 }
-PORTFOLIO = {"photographer", "wedding photo or video"}
+PORTFOLIO = {"photographer", "wedding photo or video", "wedding photographer", "wedding videographer"}
 
 
 def opener(row: dict, lead_type: str, platform: str) -> str:

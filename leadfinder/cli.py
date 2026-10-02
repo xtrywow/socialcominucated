@@ -33,6 +33,20 @@ def load_env(path: Path = Path(".env")) -> None:
             os.environ.setdefault(key.strip(), value.strip())
 
 
+def load_list(path: Path) -> list[places.Business]:
+    """Businesses found by hand or by web search, each with its own website."""
+    out = []
+    for item in json.loads(path.read_text()):
+        website = item["website"].strip()
+        out.append(places.Business(
+            place_id="web:" + website.split("//")[-1].removeprefix("www.").split("/")[0].lower(),
+            name=item["name"], category=item.get("category", ""), address="", phone="", website=website,
+            rating=0.0, reviews=0, maps_url=osm.google_maps_search_url(item["name"], item.get("region", "")),
+            region=item.get("region", ""),
+        ))
+    return out
+
+
 def parse_args(argv: list[str]) -> argparse.Namespace:
     p = argparse.ArgumentParser(description="Find Brisbane businesses that need a new website.")
     p.add_argument("--config", default="config.json")
@@ -42,7 +56,8 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     p.add_argument("--min-tier", choices=["A", "B", "C"], default="C", help="only export this tier or better")
     p.add_argument("--regions", nargs="+", help="OSM regions from config.json (default: osm_bbox as 'Brisbane')")
     p.add_argument("--require-social", action="store_true", help="only export leads with an Instagram or Facebook link")
-    p.add_argument("--source", choices=["google", "osm"], help="default: google if GOOGLE_API_KEY is set, else osm")
+    p.add_argument("--source", choices=["google", "osm", "list"], help="default: google if GOOGLE_API_KEY is set, else osm")
+    p.add_argument("--input", help="for --source list: JSON array of {name, website, region, category}")
     p.add_argument("--out", help="CSV output path")
     return p.parse_args(argv)
 
@@ -60,15 +75,20 @@ def main(argv: list[str] | None = None) -> int:
     categories = args.categories or config["categories"]
     print(f"Source: {source}", file=sys.stderr)
 
-    regions = (
-        {name: config["regions"][name] for name in args.regions}
-        if args.regions else {config.get("area", "Brisbane").split()[0]: config.get("osm_bbox")}
-    )
     seen: dict[str, places.Business] = {}
-    for (region, bbox), category in (
-        [(r, c) for r in regions.items() for c in categories] if source == "osm"
-        else [((config["area"], None), c) for c in categories]
-    ):
+    if source == "list":
+        for b in load_list(Path(args.input)):
+            seen.setdefault(b.place_id, b)
+        searches = []
+    elif source == "osm":
+        regions = (
+            {name: config["regions"][name] for name in args.regions}
+            if args.regions else {config.get("area", "Brisbane").split()[0]: config.get("osm_bbox")}
+        )
+        searches = [(r, c) for r in regions.items() for c in categories]
+    else:
+        searches = [((config["area"], None), c) for c in categories]
+    for (region, bbox), category in searches:
         try:
             if source == "google":
                 found = places.search(api_key, category, config["area"])
@@ -93,7 +113,7 @@ def main(argv: list[str] | None = None) -> int:
             if b.rating >= config.get("min_rating", 0) and b.reviews >= config.get("min_reviews", 0)
         ]
         candidates.sort(key=lambda b: b.reviews, reverse=True)
-    else:  # businesses with a listed website give verifiable evidence, audit them first
+    elif source == "osm":  # businesses with a listed website give verifiable evidence, audit them first
         candidates.sort(key=lambda b: not b.website)
     if args.limit:
         candidates = candidates[: args.limit]
@@ -114,7 +134,7 @@ def main(argv: list[str] | None = None) -> int:
     for b, audit in zip(candidates, audits):
         if source == "google":
             score = demand_score(b.rating, b.reviews) + gap_score(audit)
-        else:  # no demand data: scale the website gap to 0-100
+        else:  # OSM and lists have no demand data: scale the website gap to 0-100
             score = round(gap_score(audit) * 100 / MAX_GAP)
         facebook = b.facebook or audit.facebook or (b.website if "facebook.com" in b.website else "")
         instagram = b.instagram or audit.instagram or (b.website if "instagram.com" in b.website else "")

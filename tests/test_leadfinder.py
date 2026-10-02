@@ -308,3 +308,24 @@ def test_regions_and_merge(monkeypatch, tmp_path):
     assert merge([tmp_path / "a.csv", tmp_path / "b.csv"], tmp_path / "all.csv") == 2
     rows = list(csv.DictReader(open(tmp_path / "all.csv", encoding="utf-8-sig")))
     assert sorted(r["region"] for r in rows) == ["Cairns", "Mackay"]
+
+
+def test_list_source(tmp_path, monkeypatch):
+    import csv
+    import json
+
+    from leadfinder import cli
+    from leadfinder.audit import Audit
+
+    src = tmp_path / "sites.json"
+    src.write_text(json.dumps([
+        {"name": "Slow Lens", "website": "https://www.slowlens.com.au/", "region": "Cairns", "category": "wedding photo or video"},
+        {"name": "Dup", "website": "https://slowlens.com.au/about", "region": "Cairns"},
+    ]))
+    monkeypatch.setattr(cli, "audit_website", lambda url, key, ps: Audit(
+        status="ok", issues=["slow to load (5.0s)"], instagram="https://www.instagram.com/slowlens"))
+    monkeypatch.delenv("GOOGLE_API_KEY", raising=False)
+    out = tmp_path / "out.csv"
+    assert cli.main(["--source", "list", "--input", str(src), "--out", str(out), "--require-social"]) == 0
+    rows = list(csv.DictReader(open(out, encoding="utf-8-sig")))
+    assert len(rows) == 1 and rows[0]["region"] == "Cairns" and rows[0]["category"] == "wedding photo or video"

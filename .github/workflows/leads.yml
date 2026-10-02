@@ -43,7 +43,7 @@ jobs:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
           REGION: ${{ matrix.region }}
         run: |
-          ARGS=$(python -c "import json,os,shlex; r=json.load(open('leads-request.json')); a=['--source',r['source'],'--limit',str(r.get('limit',0)),'--min-tier',r.get('min_tier','C'),'--out','output/leads.csv','--regions',os.environ['REGION'],'--categories',*r['categories']]; a+=['--pagespeed'] if r.get('pagespeed') else []; a+=['--require-social'] if r.get('require_social') else []; print(shlex.join(a))")
+          ARGS=$(python -c "import json,os,shlex; r=json.load(open('leads-request.json')); a=['--source',r['source'],'--limit',str(r.get('limit',0)),'--min-tier',r.get('min_tier','C'),'--out','output/leads.csv','--regions',os.environ['REGION'],'--categories',*r['categories']]; a+=['--pagespeed'] if r.get('pagespeed') else []; a+=['--input',r['input']] if r.get('input') else []; a+=['--require-social'] if r.get('require_social') else []; print(shlex.join(a))")
           eval python -m leadfinder $ARGS
       - name: Name the file after the region
         run: echo "SLUG=$(echo '${{ matrix.region }}' | tr 'A-Z ' 'a-z-')" >> "$GITHUB_ENV"

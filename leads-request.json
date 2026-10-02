@@ -1,28 +1,15 @@
 {
-  "source": "osm",
+  "source": "list",
   "categories": [
-    "wedding photo or video",
-    "photographer"
+    "wedding"
   ],
   "limit": 0,
   "min_tier": "C",
   "require_social": true,
-  "pagespeed": true,
+  "pagespeed": false,
   "regions": [
-    "Brisbane",
-    "Moreton Bay",
-    "Logan",
-    "Redlands",
-    "Ipswich",
-    "Gold Coast",
-    "Sunshine Coast",
-    "Toowoomba",
-    "Cairns",
-    "Townsville",
-    "Mackay",
-    "Rockhampton",
-    "Bundaberg",
-    "Hervey Bay"
+    "All QLD"
   ],
-  "workbook": "results/AceAds-DM-outreach-Wedding-Photo-Video-QLD.xlsx"
+  "workbook": "results/AceAds-DM-outreach-Wedding-Photo-Video-QLD.xlsx",
+  "input": "wedding-sites.json"
 }

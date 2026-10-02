@@ -262,13 +262,16 @@ def test_outreach_workbook(tmp_path):
         {**base, "name": "Old Site Dental", "category": "dentist", "pitch_angle": "security certificate error (x)",
          "facebook": "https://facebook.com/osd"},
         {**base, "name": "No Handle", "category": "cafe", "pitch_angle": "no real website (uses x)"},
+        {**base, "name": "Fine Site", "category": "cafe", "pitch_angle": "", "instagram": "https://www.instagram.com/fs"},
+        {**base, "name": "Slow Lens", "category": "wedding photo or video", "pitch_angle": "slow to load (4.2s)",
+         "instagram": "https://www.instagram.com/sl"},
     ]
     src = tmp_path / "leads.csv"
     with open(src, "w", newline="", encoding="utf-8-sig") as f:
         w = csv.DictWriter(f, fieldnames=COLUMNS)
         w.writeheader()
         w.writerows(rows)
-    assert build(src, tmp_path / "out.xlsx") == 2
+    assert build(src, tmp_path / "out.xlsx") == 3
     wb = load_workbook(tmp_path / "out.xlsx")
     ws = wb["Leads"]
     assert [ws.cell(r, 4).value for r in (2, 3)] == ["Insta Cafe", "Old Site Dental"]
@@ -276,6 +279,7 @@ def test_outreach_workbook(tmp_path):
     assert "people in Gold Coast search" in ws.cell(2, 13).value and "[one real detail" in ws.cell(2, 13).value
     assert "make you a free preview" in ws.cell(2, 13).value
     assert wb["Tracker"]["A11"].value.startswith("Reply rate")
+    assert ws.cell(4, 4).value == "Slow Lens" and "your galleries" in ws.cell(4, 13).value
 
 
 def test_regions_and_merge(monkeypatch, tmp_path):

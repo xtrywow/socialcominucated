@@ -37,7 +37,9 @@ CATEGORY_PHRASE = {
     "barber or hairdresser": "hairdresser", "bar or pub": "bar", "deli or specialty food": "local food store",
     "gift or homewares": "gift shop", "gym or studio": "gym", "massage or spa": "massage", "pet business": "pet shop",
     "allied health": "health practitioner", "trades": "tradie", "takeaway": "takeaway",
+    "wedding photo or video": "wedding photographer",
 }
+PORTFOLIO = {"photographer", "wedding photo or video"}
 
 
 def opener(row: dict, lead_type: str, platform: str) -> str:
@@ -60,6 +62,9 @@ def opener(row: dict, lead_type: str, platform: str) -> str:
         problem = "noticed your website was showing an error page when we tried it"
     elif "not mobile-friendly" in row["pitch_angle"]:
         problem = "noticed your website is hard to use on a phone"
+    elif row["category"] in PORTFOLIO and ("slow to load" in row["pitch_angle"] or "poor mobile" in row["pitch_angle"]):
+        problem = ("noticed your site loads slowly on a phone, and that's often where couples and clients "
+                   "first see your galleries")
     else:
         problem = "think your website could be doing more to bring in customers"
     return (f"Hi {name} team! {hook}. We're AceAds, a web design studio. We {problem}. "
@@ -70,8 +75,8 @@ def build(csv_path: Path, out_path: Path) -> int:
     rows = list(csv.DictReader(open(csv_path, encoding="utf-8-sig")))
     leads = []
     for r in rows:
-        if not (r.get("instagram") or r.get("facebook")):
-            continue
+        if not (r.get("instagram") or r.get("facebook")) or not r["pitch_angle"].strip():
+            continue  # no DM channel, or nothing wrong we could point to
         order, priority, lead_type = classify(r["pitch_angle"])
         platform = "Instagram" if r.get("instagram") else "Facebook"
         leads.append((order, r.get("region", ""), r["category"], r["name"], priority, lead_type, platform, r))
@@ -167,6 +172,8 @@ def build(csv_path: Path, out_path: Path) -> int:
         ("", False),
         ("Do not", True),
         ("- Do not add these businesses to bulk email or automated DM tools.", False),
+        ("- Email only to an address the business publishes on its own website, copied by hand. Say who we are, keep it", False),
+        ("  about their website, and end with: 'Not interested? Reply STOP and we won't contact you again.'", False),
         ("- Do not claim anything about their business you have not checked.", False),
         ("", False),
         ("Source: OpenStreetMap (c) OpenStreetMap contributors, plus links found on the businesses' own websites.", False),

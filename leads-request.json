@@ -10,6 +10,6 @@
   "regions": [
     "All QLD"
   ],
-  "workbook": "results/AceAds-DM-outreach-Wedding-Photo-Video-QLD.xlsx",
-  "input": "wedding-sites.json"
+  "workbook": "results/AceAds-DM-outreach-Wedding-Industry-QLD.xlsx",
+  "input": "research/wedding-industry-sites.json"
 }

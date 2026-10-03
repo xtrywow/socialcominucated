@@ -15,6 +15,8 @@ from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.datavalidation import DataValidation
 
+from .exclude import is_competitor
+
 STATUSES = ["Not contacted", "DM sent", "Replied", "Preview sent", "Meeting booked", "Won", "Not interested", "Business closed"]
 NAVY, WHITE = "1F3864", "FFFFFF"
 PRIORITY_FILL = {"HIGH": "C6EFCE", "VERIFY FIRST": "FFEB9C", "MEDIUM": "DDEBF7"}
@@ -37,9 +39,9 @@ CATEGORY_PHRASE = {
     "barber or hairdresser": "hairdresser", "bar or pub": "bar", "deli or specialty food": "local food store",
     "gift or homewares": "gift shop", "gym or studio": "gym", "massage or spa": "massage", "pet business": "pet shop",
     "allied health": "health practitioner", "trades": "tradie", "takeaway": "takeaway",
-    "wedding photo or video": "wedding photographer",
+    "wedding venue": "wedding venue", "hair and makeup": "hair and makeup artist",
+    "wedding planner or stylist": "wedding planner", "event hire": "event hire business",
 }
-PORTFOLIO = {"photographer", "wedding photo or video", "wedding photographer", "wedding videographer"}
 
 
 def opener(row: dict, lead_type: str, platform: str) -> str:
@@ -62,9 +64,8 @@ def opener(row: dict, lead_type: str, platform: str) -> str:
         problem = "noticed your website was showing an error page when we tried it"
     elif "not mobile-friendly" in row["pitch_angle"]:
         problem = "noticed your website is hard to use on a phone"
-    elif row["category"] in PORTFOLIO and ("slow to load" in row["pitch_angle"] or "poor mobile" in row["pitch_angle"]):
-        problem = ("noticed your site loads slowly on a phone, and that's often where couples and clients "
-                   "first see your galleries")
+    elif "slow to load" in row["pitch_angle"] or "poor mobile" in row["pitch_angle"]:
+        problem = "noticed your website takes a while to load on a phone, which is where most people will first see it"
     else:
         problem = "think your website could be doing more to bring in customers"
     return (f"Hi {name} team! {hook}. We're AceAds, a web design studio. We {problem}. "
@@ -75,6 +76,8 @@ def build(csv_path: Path, out_path: Path) -> int:
     rows = list(csv.DictReader(open(csv_path, encoding="utf-8-sig")))
     leads = []
     for r in rows:
+        if is_competitor(r["name"], r["category"]):
+            continue
         if not (r.get("instagram") or r.get("facebook")) or not r["pitch_angle"].strip():
             continue  # no DM channel, or nothing wrong we could point to
         order, priority, lead_type = classify(r["pitch_angle"])

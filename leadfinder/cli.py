@@ -16,6 +16,7 @@ import requests
 
 from . import osm, places
 from .audit import Audit, audit_website, is_excluded
+from .exclude import is_competitor
 from .scoring import MAX_GAP, demand_score, gap_score, tier
 
 COLUMNS = [
@@ -106,7 +107,7 @@ def main(argv: list[str] | None = None) -> int:
             b.region = region
             seen.setdefault(b.place_id, b)
 
-    candidates = [b for b in seen.values() if not is_excluded(b.website)]
+    candidates = [b for b in seen.values() if not is_excluded(b.website) and not is_competitor(b.name, b.category)]
     if source == "google":  # OSM has no ratings, so there is nothing to filter on
         candidates = [
             b for b in candidates

@@ -107,10 +107,6 @@
     "tattoo studio": [
       "\"shop\"=\"tattoo\""
     ],
-    "photographer": [
-      "\"craft\"=\"photographer\"",
-      "\"shop\"=\"photo\""
-    ],
     "real estate agent": [
       "\"office\"=\"estate_agent\""
     ],
@@ -143,10 +139,6 @@
       "\"shop\"=\"greengrocer\"",
       "\"shop\"=\"wine\"",
       "\"shop\"=\"coffee\""
-    ],
-    "wedding photo or video": [
-      "\"name\"~\"wedding|bridal|elope\",i][\"name\"~\"photo|video|film|cinema|studio|capture|story|lens\",i",
-      "\"name\"~\"videograph|cinematograph\",i"
     ]
   },
   "regions": {

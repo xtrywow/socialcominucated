@@ -263,8 +263,8 @@ def test_outreach_workbook(tmp_path):
          "facebook": "https://facebook.com/osd"},
         {**base, "name": "No Handle", "category": "cafe", "pitch_angle": "no real website (uses x)"},
         {**base, "name": "Fine Site", "category": "cafe", "pitch_angle": "", "instagram": "https://www.instagram.com/fs"},
-        {**base, "name": "Slow Lens", "category": "wedding photo or video", "pitch_angle": "slow to load (4.2s)",
-         "instagram": "https://www.instagram.com/sl"},
+        {**base, "name": "Slow Bloom", "category": "florist", "pitch_angle": "slow to load (4.2s)",
+         "instagram": "https://www.instagram.com/sb"},
     ]
     src = tmp_path / "leads.csv"
     with open(src, "w", newline="", encoding="utf-8-sig") as f:
@@ -279,7 +279,7 @@ def test_outreach_workbook(tmp_path):
     assert "people in Gold Coast search" in ws.cell(2, 13).value and "[one real detail" in ws.cell(2, 13).value
     assert "make you a free preview" in ws.cell(2, 13).value
     assert wb["Tracker"]["A11"].value.startswith("Reply rate")
-    assert ws.cell(4, 4).value == "Slow Lens" and "your galleries" in ws.cell(4, 13).value
+    assert ws.cell(4, 4).value == "Slow Bloom" and "load on a phone" in ws.cell(4, 13).value
 
 
 def test_regions_and_merge(monkeypatch, tmp_path):
@@ -319,13 +319,23 @@ def test_list_source(tmp_path, monkeypatch):
 
     src = tmp_path / "sites.json"
     src.write_text(json.dumps([
-        {"name": "Slow Lens", "website": "https://www.slowlens.com.au/", "region": "Cairns", "category": "wedding photo or video"},
-        {"name": "Dup", "website": "https://slowlens.com.au/about", "region": "Cairns"},
+        {"name": "Slow Bloom", "website": "https://www.slowbloom.com.au/", "region": "Cairns", "category": "florist"},
+        {"name": "Dup", "website": "https://slowbloom.com.au/about", "region": "Cairns"},
     ]))
     monkeypatch.setattr(cli, "audit_website", lambda url, key, ps: Audit(
-        status="ok", issues=["slow to load (5.0s)"], instagram="https://www.instagram.com/slowlens"))
+        status="ok", issues=["slow to load (5.0s)"], instagram="https://www.instagram.com/slowbloom"))
     monkeypatch.delenv("GOOGLE_API_KEY", raising=False)
     out = tmp_path / "out.csv"
     assert cli.main(["--source", "list", "--input", str(src), "--out", str(out), "--require-social"]) == 0
     rows = list(csv.DictReader(open(out, encoding="utf-8-sig")))
-    assert len(rows) == 1 and rows[0]["region"] == "Cairns" and rows[0]["category"] == "wedding photo or video"
+    assert len(rows) == 1 and rows[0]["region"] == "Cairns" and rows[0]["category"] == "florist"
+
+
+def test_competitors_excluded():
+    from leadfinder.exclude import is_competitor
+
+    assert is_competitor("Salt & Light Photography", "cafe")
+    assert is_competitor("Anything", "photographer")
+    assert is_competitor("Coastal Films", "wedding venue")
+    assert not is_competitor("Bloom Florist", "florist")
+    assert not is_competitor("Photosynthesis Plant Shop", "gift or homewares")

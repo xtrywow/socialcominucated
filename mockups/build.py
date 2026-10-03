@@ -8,10 +8,12 @@ reviews or claims about a real business.
 
 from __future__ import annotations
 
+import argparse
 import hashlib
 import html
 import json
 import re
+import unicodedata
 from pathlib import Path
 from urllib.parse import quote_plus
 
@@ -145,6 +147,58 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-bet
 @media (prefers-reduced-motion:reduce){*{animation:none!important;scroll-behavior:auto!important}}
 """
 
+# Which theme and which middle section a business type gets. Anything else is a "services" business.
+THEME_BY_TYPE = {
+    "cafe": "morning", "restaurant": "brass", "takeaway": "dropout", "bar or pub": "brass", "bakery": "morning",
+    "barber or hairdresser": "dropout", "beauty salon": "morning", "tattoo studio": "dropout",
+}
+FOOD_TYPES = {"cafe", "restaurant", "takeaway", "bar or pub", "bakery", "deli or specialty food"}
+SECTIONS = {
+    "menu": {
+        "eyebrow": "Menu", "title": "What's on today",
+        "note": "Your real menu goes here. You update items and prices yourself, from your phone.",
+        "cards": [("Coffee", "Your coffee list and prices."), ("Food", "Breakfast, lunch, specials."),
+                  ("Something sweet", "Cakes, pastries, the cabinet.")],
+    },
+    "services": {
+        "eyebrow": "Services", "title": "What we do",
+        "note": "Your services and prices go here. You update them yourself, from your phone.",
+        "cards": [("Service one", "A short line about it."), ("Service two", "A short line about it."),
+                  ("Service three", "A short line about it.")],
+    },
+}
+
+
+def slugify(text: str) -> str:
+    text = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode()
+    return re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-") or "preview"
+
+
+def social_label(url: str) -> str:
+    return "Instagram" if "instagram.com" in url else "Facebook" if "facebook.com" in url else "social media"
+
+
+def from_request(req: dict) -> dict:
+    """A website-preview request from the aceads.au form -> a business record for render()."""
+    name = req["business"].strip()
+    kind = req.get("type", "").strip() or "business"
+    place = req.get("suburb", "").strip() or "Queensland"
+    social = req.get("social", "").strip()
+    return {
+        "slug": req.get("slug") or slugify(f"{name}-{place}"),
+        "name": name,
+        "kind": kind,
+        "place": place,
+        "address": req.get("address", "").strip() or place,
+        "phone": req.get("phone", "").strip(),
+        "social": social,
+        "social_label": social_label(social),
+        "headline": f"{kind[0].upper() + kind[1:]} in {place}.",
+        "theme": THEME_BY_TYPE.get(kind.lower(), "brass"),
+        "section": "menu" if kind.lower() in FOOD_TYPES else "services",
+    }
+
+
 PAGE = """<!doctype html>
 <html lang="en-AU">
 <head>
@@ -170,14 +224,10 @@ PAGE = """<!doctype html>
 </header>
 <main>
   <section id="menu"><div class="wrap">
-    <p class="eyebrow">Menu</p>
-    <h2>What's on today</h2>
-    <p class="note">Your real menu goes here. You update items and prices yourself, from your phone.</p>
-    <div class="grid">
-      <div class="card"><h3>Coffee</h3><p>Your coffee list and prices.</p></div>
-      <div class="card"><h3>Food</h3><p>Breakfast, lunch, specials.</p></div>
-      <div class="card"><h3>Something sweet</h3><p>Cakes, pastries, the cabinet.</p></div>
-    </div>
+    <p class="eyebrow">{sec_eyebrow}</p>
+    <h2>{sec_title}</h2>
+    <p class="note">{sec_note}</p>
+    <div class="grid">{sec_cards}</div>
   </div></section>
   <section id="photos"><div class="wrap">
     <p class="eyebrow">Inside {name}</p>
@@ -201,9 +251,9 @@ PAGE = """<!doctype html>
 <footer><div class="wrap"><span>{name} · {address}</span><a href="{social}">{social_label}</a></div></footer>
 <aside class="pitch"><div class="wrap">
   <h2>Like it? This can be your real website in 7 days.</h2>
-  <p>AceAds builds it with your menu, photos and hours, connects your domain and sets up Google.</p>
+  <p>AceAds builds it with your content, photos and hours, connects your domain and sets up Google.</p>
   <ul><li>Works on every phone</li><li>Customers can call or get directions in one tap</li><li>You own it, not Facebook</li></ul>
-  <p style="margin-top:16px">Reply to our message to get started.</p>
+  <p style="margin-top:16px">{pitch_cta}</p>
 </div></aside>
 </body>
 </html>
@@ -241,9 +291,10 @@ def fitted_size(name: str, theme: dict) -> str:
     return f"min({theme['max_px']}px,calc((100vw - {theme['pad_px']}px) / {longest * theme['glyph']:.2f}))"
 
 
-def render(b: dict, fontface: str) -> str:
+def render(b: dict, fontface: str, pitch_cta: str = "Reply to our message to get started.") -> str:
     theme = THEMES[b["theme"]]
-    e = {k: html.escape(v) for k, v in b.items()}
+    section = SECTIONS[b.get("section", "menu")]
+    e = {k: html.escape(v) for k, v in b.items() if isinstance(v, str)}
     name = e["name"].upper() if theme["upper"] else e["name"]
     title = f'<h1 style="font-size:{fitted_size(b["name"], theme)}">{name}</h1>'
     if b["theme"] == "brass":
@@ -260,17 +311,34 @@ def render(b: dict, fontface: str) -> str:
         title=title,
         sticker=sticker,
         tel=b["phone"].replace(" ", ""),
+        sec_eyebrow=section["eyebrow"],
+        sec_title=section["title"],
+        sec_note=section["note"],
+        sec_cards="".join(f"<div class=\"card\"><h3>{h}</h3><p>{p}</p></div>" for h, p in section["cards"]),
+        pitch_cta=html.escape(pitch_cta),
         directions="https://www.google.com/maps/search/?api=1&amp;query=" + quote_plus(f'{b["name"]} {b["address"]}'),
     )
 
 
+def build(b: dict, pitch_cta: str = "Reply to our message to get started.") -> Path:
+    out = ROOT / "out" / b["slug"] / "index.html"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    fontface = fetch_fonts(THEMES[b["theme"]]["fonts"], out.parent)
+    out.write_text(render(b, fontface, pitch_cta), encoding="utf-8")
+    return out
+
+
 def main() -> None:
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--request", help="JSON file with one form request (business, type, suburb, social, phone)")
+    args = ap.parse_args()
+    if args.request:
+        req = json.loads(Path(args.request).read_text())
+        b = from_request(req)
+        print(build(b, req.get("cta") or "We'll call you to walk through it. Nothing is live until you say so."))
+        return
     for b in json.loads((ROOT / "businesses.json").read_text()):
-        out = ROOT / "out" / b["slug"] / "index.html"
-        out.parent.mkdir(parents=True, exist_ok=True)
-        fontface = fetch_fonts(THEMES[b["theme"]]["fonts"], out.parent)
-        out.write_text(render(b, fontface), encoding="utf-8")
-        print(out)
+        print(build(b))
 
 
 if __name__ == "__main__":

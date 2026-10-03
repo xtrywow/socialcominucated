@@ -339,3 +339,34 @@ def test_competitors_excluded():
     assert is_competitor("Coastal Films", "wedding venue")
     assert not is_competitor("Bloom Florist", "florist")
     assert not is_competitor("Photosynthesis Plant Shop", "gift or homewares")
+
+
+def test_preview_from_form_request(tmp_path, monkeypatch):
+    import importlib
+    import sys
+
+    sys.path.insert(0, "mockups")
+    build = importlib.import_module("build")
+    b = build.from_request({"business": "Bloom & Co Florist", "type": "florist", "suburb": "Paddington, Brisbane",
+                            "social": "https://www.instagram.com/bloomco", "phone": "0400 000 000"})
+    assert b["slug"] == "bloom-co-florist-paddington-brisbane" and b["section"] == "services" and b["social_label"] == "Instagram"
+    page = build.render(b, "", "We'll call you.")
+    assert "Bloom &amp; Co Florist" in page and "What we do" in page and "Concept preview" in page and "noindex" in page
+    cafe = build.from_request({"business": "Corner Cafe", "type": "cafe", "suburb": "Logan"})
+    assert cafe["section"] == "menu" and cafe["theme"] == "morning" and "Menu" in build.render(cafe, "")
+
+
+def test_deliver_payload(tmp_path, monkeypatch):
+    import importlib
+    import sys
+
+    sys.path.insert(0, "mockups")
+    deliver = importlib.import_module("deliver")
+    monkeypatch.setattr(deliver, "ROOT", tmp_path)
+    folder = tmp_path / "out" / "x"
+    (folder / "fonts").mkdir(parents=True)
+    (folder / "index.html").write_text("<p>hi</p>")
+    (folder / "fonts" / "a.woff2").write_bytes(b"\x00")
+    (folder / "notes.txt").write_text("skip me")
+    p = deliver.payload("x")
+    assert set(p["files"]) == {"index.html", "fonts/a.woff2"} and p["slug"] == "x"

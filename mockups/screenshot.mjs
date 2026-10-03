@@ -8,7 +8,8 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 const outDir = join(dirname(fileURLToPath(import.meta.url)), "out");
 const browser = await chromium.launch();
-for (const slug of readdirSync(outDir)) {
+const only = process.argv[2]; // optional: one slug
+for (const slug of only ? [only] : readdirSync(outDir)) {
   const url = pathToFileURL(join(outDir, slug, "index.html")).href;
   for (const [label, viewport] of [["phone", { width: 390, height: 844 }], ["desktop", { width: 1280, height: 800 }]]) {
     const page = await browser.newPage({ viewport, deviceScaleFactor: 2 });

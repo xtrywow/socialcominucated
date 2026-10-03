@@ -1,0 +1,49 @@
+name: Build website preview
+
+# Fired by the aceads.au WordPress plugin (repository_dispatch) when someone
+# requests a free preview. Renders the concept page, screenshots it and sends
+# the files back to the site, which notifies the team and the prospect.
+on:
+  repository_dispatch:
+    types: [preview_request]
+
+concurrency:
+  group: preview-${{ github.event.client_payload.slug }}
+  cancel-in-progress: false
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: pip install -r requirements.txt
+      - name: Write the request
+        env:
+          PAYLOAD: ${{ toJson(github.event.client_payload) }}
+        run: printf '%s' "$PAYLOAD" > request.json
+      - name: Render the page
+        run: python mockups/build.py --request request.json
+      - name: Screenshot it
+        env:
+          SLUG: ${{ github.event.client_payload.slug }}
+        run: |
+          npm install --no-save playwright@1.47.2
+          npx playwright install --with-deps chromium
+          node mockups/screenshot.mjs "$SLUG"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: preview-${{ github.event.client_payload.slug }}
+          path: mockups/out/${{ github.event.client_payload.slug }}
+      - name: Send it to aceads.au
+        env:
+          PREVIEW_SECRET: ${{ secrets.PREVIEW_SECRET }}
+          SLUG: ${{ github.event.client_payload.slug }}
+          CALLBACK: ${{ github.event.client_payload.callback }}
+        run: python mockups/deliver.py --slug "$SLUG" --callback "$CALLBACK"

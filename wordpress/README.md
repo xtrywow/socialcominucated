@@ -9,6 +9,8 @@ email and the team gets a second Telegram message saying "call them".
 Nothing is sent to anyone who did not ask for it: the prospect typed their own
 details and ticked the consent box, so the email is solicited.
 
+See `mockups/README.md` for how the preview itself is built.
+
 ## Install (once, about 20 minutes)
 
 1. **Plugin.** Zip the `aceads-preview` folder (or use the zip in this folder),

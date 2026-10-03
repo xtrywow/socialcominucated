@@ -1,0 +1,37 @@
+name: Daily leads to Telegram
+
+# Weekday mornings (7:00 Brisbane = 21:00 UTC the day before): the next 20 leads
+# with ready DMs go to the team's Telegram group. Needs secrets TELEGRAM_TOKEN
+# and TELEGRAM_CHAT. Run it by hand from the Actions tab to test.
+on:
+  schedule:
+    - cron: "0 21 * * 0-4"
+  workflow_dispatch:
+    inputs:
+      count:
+        description: how many leads
+        default: "20"
+
+permissions:
+  contents: write
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT: ${{ secrets.TELEGRAM_CHAT }}
+        run: python -m leadfinder.digest results/leads-all.csv --count "${{ github.event.inputs.count || '20' }}"
+      - name: Remember what was sent
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results/digest-state.json
+          git diff --cached --quiet || git commit -m "Daily leads sent $(date -u +%Y-%m-%d)"
+          git pull --rebase origin "$GITHUB_REF_NAME" && git push

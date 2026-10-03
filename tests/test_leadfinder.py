@@ -370,3 +370,32 @@ def test_deliver_payload(tmp_path, monkeypatch):
     (folder / "notes.txt").write_text("skip me")
     p = deliver.payload("x")
     assert set(p["files"]) == {"index.html", "fonts/a.woff2"} and p["slug"] == "x"
+
+
+def test_daily_digest(tmp_path, capsys):
+    import csv
+
+    from leadfinder.cli import COLUMNS
+    from leadfinder.digest import main
+
+    base = dict.fromkeys(COLUMNS, "")
+    rows = [
+        {**base, "place_id": "a", "name": "Verify Me", "category": "cafe", "region": "Logan", "score": "58",
+         "pitch_angle": "no website listed, only social media", "facebook": "https://facebook.com/vm", "maps_url": "m"},
+        {**base, "place_id": "b", "name": "Hot Lead", "category": "cafe", "region": "Logan", "score": "75",
+         "pitch_angle": "no real website (uses facebook)", "facebook": "https://facebook.com/hl", "maps_url": "m"},
+        {**base, "place_id": "c", "name": "Snap Photography", "category": "cafe", "score": "99",
+         "pitch_angle": "no real website (uses facebook)", "facebook": "https://facebook.com/sp", "maps_url": "m"},
+    ]
+    src = tmp_path / "leads.csv"
+    with open(src, "w", newline="", encoding="utf-8-sig") as f:
+        w = csv.DictWriter(f, fieldnames=COLUMNS)
+        w.writeheader()
+        w.writerows(rows)
+    state = tmp_path / "state.json"
+    assert main([str(src), "--count", "1", "--state", str(state)]) == 0
+    out = capsys.readouterr().out
+    assert "Hot Lead" in out and "Verify Me" not in out and "Photography" not in out
+    assert main([str(src), "--count", "5", "--state", str(state)]) == 0
+    out = capsys.readouterr().out
+    assert "Verify Me" in out and "Hot Lead" not in out

@@ -11,6 +11,9 @@ You are researching prospects for **AceAds** (aceads.au), a Brisbane studio: rea
 - Target: 80 businesses in total, split as: Segment A 30, Segment B 25, Segment C 25 (one segment per run is better than all three at once)
 - Area this week: Brisbane inner north and east (Fortitude Valley, New Farm, Teneriffe, Newstead, Paddington, Rosalie, West End, Bulimba, Hawthorne). Next areas in later batches: Brisbane south and west, Gold Coast (Burleigh, Palm Beach, Broadbeach, Miami), Sunshine Coast (Noosa, Mooloolaba, Maroochydore, Buderim).
 
+## Start from the candidate list
+`leads\candidates-YYYY-MM-DD.csv` already lists businesses found by web search for this batch (segment, business, website, suburb, a note from the search). Work through it first: open each business's own site, check it against every rule below, and drop any that fail. Search for more only if you are short of the target after that. The search notes are leads, not facts: confirm everything on the business's own site.
+
 ## Hard rules (break one and the row is useless)
 1. **Do not contact anyone.** No email, no DM, no form submission, no sign-up, no login to any account, no calls.
 2. **An email address is usable only if it is published on the business's own website** (contact page, footer, about page) or on its own group's website. Not from directories, Google, Facebook, Instagram, ABN lookups, data brokers, or guessing a pattern. Record the exact page URL where you saw it. If the site hides the address behind a form only, record "form only" and no email.

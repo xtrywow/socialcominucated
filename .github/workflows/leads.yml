@@ -25,10 +25,10 @@ jobs:
   leads:
     needs: plan
     runs-on: ubuntu-latest
-    timeout-minutes: 150
+    timeout-minutes: 300
     strategy:
       fail-fast: false
-      max-parallel: 4  # stay polite to the free Overpass servers
+      max-parallel: 6  # stay polite to the free Overpass servers
       matrix:
         region: ${{ fromJson(needs.plan.outputs.regions) }}
     steps:

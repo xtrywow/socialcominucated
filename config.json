@@ -90,7 +90,6 @@
     "boutique": [
       "\"shop\"=\"clothes\"",
       "\"shop\"=\"shoes\"",
-      "\"shop\"=\"jewelry\"",
       "\"shop\"=\"bag\""
     ],
     "gift or homewares": [
@@ -139,6 +138,54 @@
       "\"shop\"=\"greengrocer\"",
       "\"shop\"=\"wine\"",
       "\"shop\"=\"coffee\""
+    ],
+    "interior design": [
+      "\"shop\"=\"interior_decoration\"",
+      "\"shop\"=\"curtain\"",
+      "\"shop\"=\"flooring\"",
+      "\"office\"=\"interior_design\""
+    ],
+    "architect": [
+      "\"office\"=\"architect\""
+    ],
+    "joinery or kitchens": [
+      "\"craft\"=\"joiner\"",
+      "\"craft\"=\"cabinet_maker\"",
+      "\"shop\"=\"kitchen\"",
+      "\"shop\"=\"bathroom_furnishing\""
+    ],
+    "furniture": [
+      "\"shop\"=\"furniture\""
+    ],
+    "accommodation": [
+      "\"tourism\"=\"hotel\"",
+      "\"tourism\"=\"motel\"",
+      "\"tourism\"=\"guest_house\""
+    ],
+    "professional services": [
+      "\"office\"=\"accountant\"",
+      "\"office\"=\"lawyer\"",
+      "\"office\"=\"financial\"",
+      "\"office\"=\"financial_advisor\""
+    ],
+    "vet": [
+      "\"amenity\"=\"veterinary\""
+    ],
+    "car or bike shop": [
+      "\"shop\"=\"car\"",
+      "\"shop\"=\"bicycle\"",
+      "\"shop\"=\"motorcycle\""
+    ],
+    "liquor or wine": [
+      "\"shop\"=\"alcohol\"",
+      "\"shop\"=\"wine\""
+    ],
+    "medical clinic": [
+      "\"amenity\"=\"clinic\"",
+      "\"amenity\"=\"doctors\""
+    ],
+    "jeweller": [
+      "\"shop\"=\"jewelry\""
     ]
   },
   "regions": {
@@ -225,6 +272,36 @@
       152.75,
       -25.25,
       152.95
+    ],
+    "Gladstone": [
+      -23.9,
+      151.15,
+      -23.8,
+      151.32
+    ],
+    "Airlie Beach": [
+      -20.3,
+      148.65,
+      -20.24,
+      148.76
+    ],
+    "Gympie": [
+      -26.25,
+      152.62,
+      -26.13,
+      152.72
+    ],
+    "Warwick": [
+      -28.25,
+      151.97,
+      -28.17,
+      152.07
+    ],
+    "Maryborough": [
+      -25.58,
+      152.66,
+      -25.5,
+      152.74
     ]
   }
 }

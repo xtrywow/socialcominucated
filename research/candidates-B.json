@@ -1,0 +1,546 @@
+[
+  {
+    "segment": "B",
+    "business": "Sol Hair",
+    "website": "https://solhair.com.au/",
+    "suburb": "Paddington",
+    "kind": "hair salon",
+    "why": "Award-winning sustainable salon led by Kristie Sibson"
+  },
+  {
+    "segment": "B",
+    "business": "Mi Color Hair Specialists",
+    "website": "https://www.micolor.com.au/",
+    "suburb": "Paddington",
+    "kind": "hair salon",
+    "why": "Colour specialist salon at 106 Latrobe Tce, 7+ years"
+  },
+  {
+    "segment": "B",
+    "business": "Verve Hair",
+    "website": "https://vervehair.com/",
+    "suburb": "Paddington",
+    "kind": "hair salon",
+    "why": "Given Tce salon, 20+ years, Wella partner"
+  },
+  {
+    "segment": "B",
+    "business": "Maddisons Hair Design",
+    "website": "https://www.maddisonshairdesign.com.au/",
+    "suburb": "Paddington",
+    "kind": "hair salon",
+    "why": "Colour specialist at 267 Given Tce; site title says 'Hairdresser Bardon'"
+  },
+  {
+    "segment": "B",
+    "business": "Le Caprice Patisserie",
+    "website": "https://www.lecapricepatisserie.com/",
+    "suburb": "Bulimba",
+    "kind": "bakery",
+    "why": "Authentic French patisserie at 151 Oxford St"
+  },
+  {
+    "segment": "B",
+    "business": "Darvella Patisserie",
+    "website": "https://darvellapatisserie.com/",
+    "suburb": "Bulimba",
+    "kind": "bakery",
+    "why": "Swiss-inspired patisserie at 37 Oxford St, people queue"
+  },
+  {
+    "segment": "B",
+    "business": "Fabulous Pilates and Yoga",
+    "website": "https://www.fabulouspilates.com.au/",
+    "suburb": "Newstead",
+    "kind": "pilates studio",
+    "why": "Independent pilates and yoga studio in Newstead"
+  },
+  {
+    "segment": "B",
+    "business": "Jaz n Angel",
+    "website": "https://jaznangel.com.au/pages/jaznangel-store",
+    "suburb": "West End",
+    "kind": "fashion boutique",
+    "why": "Fashion store at 83A Boundary St"
+  },
+  {
+    "segment": "B",
+    "business": "Don't Tell Boutique",
+    "website": "https://donttellboutique.com/",
+    "suburb": "West End",
+    "kind": "fashion boutique",
+    "why": "Women's fashion and gifts at 173 Boundary St"
+  },
+  {
+    "segment": "B",
+    "business": "Aster + Lilou",
+    "website": "https://www.asterandlilou.com/",
+    "suburb": "West End",
+    "kind": "fashion boutique",
+    "why": "Women's boutique, vintage/handmade/new, 153 Boundary St"
+  },
+  {
+    "segment": "B",
+    "business": "Lidos Boutique",
+    "website": "https://lidosboutique.com/",
+    "suburb": "West End",
+    "kind": "fashion boutique",
+    "why": "Curated women's clothing and gifts, 163 Boundary St"
+  },
+  {
+    "segment": "B",
+    "business": "Hawthorne Garage",
+    "website": "https://www.hawthornegarage.com.au/hawthorne-cafe/",
+    "suburb": "Hawthorne",
+    "kind": "cafe / grocer",
+    "why": "Cafe (DNA Espresso coffee) open daily 6am-8pm"
+  },
+  {
+    "segment": "B",
+    "business": "MK Cafe New Farm",
+    "website": "https://mkcafenewfarm.com/",
+    "suburb": "New Farm",
+    "kind": "cafe",
+    "why": "Local brunch cafe at 938 Brunswick St"
+  },
+  {
+    "segment": "B",
+    "business": "New Farm Deli",
+    "website": "https://www.newfarmdeli.com.au/cafe",
+    "suburb": "New Farm",
+    "kind": "cafe / deli",
+    "why": "Italian deli-cafe hub in Merthyr Village"
+  },
+  {
+    "segment": "B",
+    "business": "Ryan.Co Barbershop",
+    "website": "https://www.ryancobarbershop.com.au/",
+    "suburb": "Fortitude Valley",
+    "kind": "barber",
+    "why": "Appointment-based barbershop at 850 Ann St"
+  },
+  {
+    "segment": "B",
+    "business": "RTM Blades",
+    "website": "https://rtmblades.com.au/",
+    "suburb": "Fortitude Valley",
+    "kind": "barber",
+    "why": "Small local barber on Wickham St, 15+ years"
+  },
+  {
+    "segment": "B",
+    "business": "La Barberia and Co",
+    "website": "https://la-barberia-co.square.site/",
+    "suburb": "Fortitude Valley",
+    "kind": "barber",
+    "why": "Italian-style barber on St Pauls Tce; site on Square default subdomain"
+  },
+  {
+    "segment": "B",
+    "business": "Twin Palms Barbershop",
+    "website": "https://twinpalms.co/",
+    "suburb": "Fortitude Valley",
+    "kind": "barber",
+    "why": "James St barbershop since 2017"
+  },
+  {
+    "segment": "B",
+    "business": "Superthing",
+    "website": "https://www.superthing.com.au/",
+    "suburb": "West End",
+    "kind": "bakery",
+    "why": "Croissanterie/bakery cafe at 215 Montague Rd"
+  },
+  {
+    "segment": "B",
+    "business": "Beautiful You by Nadia",
+    "website": "https://www.beautifulyoubynadia.com/",
+    "suburb": "Bulimba",
+    "kind": "beauty salon",
+    "why": "Appointment-only facials/peels at 7 Apollo Rd; also has a business.site page"
+  },
+  {
+    "segment": "B",
+    "business": "Byron Eve",
+    "website": "https://byroneve.com.au/",
+    "suburb": "Bulimba",
+    "kind": "beauty salon / skin clinic",
+    "why": "Boutique beauty salon on Oxford St, two studios"
+  },
+  {
+    "segment": "B",
+    "business": "b Hair",
+    "website": "https://www.bhair.com.au/",
+    "suburb": "Bulimba",
+    "kind": "hair salon",
+    "why": "Colour/balayage salon at 77 Oxford St"
+  },
+  {
+    "segment": "B",
+    "business": "Brisbane Empower Beauty",
+    "website": "https://brisbaneempowerbeauty.com/",
+    "suburb": "Bulimba",
+    "kind": "beauty salon",
+    "why": "Lash and brow studio at 7 Apollo Rd"
+  },
+  {
+    "segment": "B",
+    "business": "Biscuit Hair Studio",
+    "website": "https://www.biscuithairstudio.com/",
+    "suburb": "Bulimba",
+    "kind": "hair salon",
+    "why": "Salon at 37 Oxford St precinct"
+  },
+  {
+    "segment": "B",
+    "business": "Oxford Street Hair",
+    "website": "https://www.oxfordstreethair.com.au/",
+    "suburb": "Bulimba",
+    "kind": "hair salon",
+    "why": "Makeovers, colour, extensions at 204 Oxford St"
+  },
+  {
+    "segment": "B",
+    "business": "Organic Hair Studio Bulimba",
+    "website": "https://organichairspace.com/",
+    "suburb": "Bulimba",
+    "kind": "hair salon",
+    "why": "Organic salon at 61 Oxford St"
+  },
+  {
+    "segment": "B",
+    "business": "Club Bunker",
+    "website": "https://www.clubbunker.com.au/",
+    "suburb": "Newstead",
+    "kind": "gym",
+    "why": "Independent 24/7 gym with CrossFit/HYROX"
+  },
+  {
+    "segment": "B",
+    "business": "Oxford 152",
+    "website": "https://www.oxford152.com.au/",
+    "suburb": "Bulimba",
+    "kind": "restaurant / bar",
+    "why": "Share plates, pub classics, steaks at 152 Oxford St"
+  },
+  {
+    "segment": "B",
+    "business": "Old Mr Rabbit",
+    "website": "https://www.oldmrrabbit.com.au/",
+    "suburb": "Bulimba",
+    "kind": "restaurant / bar",
+    "why": "Lunch and dinner 7 days at 210 Oxford St"
+  },
+  {
+    "segment": "B",
+    "business": "IL MOLO",
+    "website": "https://www.ilmolo.com.au/",
+    "suburb": "Bulimba",
+    "kind": "restaurant",
+    "why": "Riverfront Italian at 1B Oxford St"
+  },
+  {
+    "segment": "B",
+    "business": "Adda@Oxford",
+    "website": "https://brisbaneadda.com.au/",
+    "suburb": "Bulimba",
+    "kind": "restaurant",
+    "why": "Dinner-only restaurant at 171 Oxford St"
+  },
+  {
+    "segment": "B",
+    "business": "Noir Paddington",
+    "website": "https://noirpaddington.com.au/",
+    "suburb": "Paddington",
+    "kind": "restaurant / bar",
+    "why": "Paddington venue on Latrobe Tce"
+  },
+  {
+    "segment": "B",
+    "business": "IL POSTO",
+    "website": "https://ilposto.com.au/",
+    "suburb": "Paddington",
+    "kind": "restaurant",
+    "why": "Italian pasta/pizza at 107 Latrobe Tce"
+  },
+  {
+    "segment": "B",
+    "business": "Rosalie Gourmet Market",
+    "website": "https://rosaliegourmet.com.au/pages/the-balcony",
+    "suburb": "Rosalie",
+    "kind": "deli / cafe",
+    "why": "Family-run food hall and cafe on Baroona Rd since 1997"
+  },
+  {
+    "segment": "B",
+    "business": "West End Yoga",
+    "website": "https://westendyoga.org/",
+    "suburb": "West End",
+    "kind": "yoga studio",
+    "why": "Community yoga studio at 404 Montague Rd"
+  },
+  {
+    "segment": "B",
+    "business": "West End Yoga Centre",
+    "website": "https://westendyoga.com.au/",
+    "suburb": "West End",
+    "kind": "yoga studio",
+    "why": "Iyengar yoga studio at 74 Vulture St"
+  },
+  {
+    "segment": "B",
+    "business": "Tree Kids Yoga",
+    "website": "https://www.treekidsyoga.com/",
+    "suburb": "West End",
+    "kind": "yoga studio",
+    "why": "Kids and family yoga at 205 Boundary St"
+  },
+  {
+    "segment": "B",
+    "business": "Kundalini Yoga Brisbane",
+    "website": "https://kundaliniyogabrisbane.com.au/",
+    "suburb": "West End",
+    "kind": "yoga studio",
+    "why": "Kundalini studio on Sussex St"
+  },
+  {
+    "segment": "B",
+    "business": "Department of Home and Gifts",
+    "website": "http://www.departmentofhomeandgifts.com.au/",
+    "suburb": "New Farm",
+    "kind": "homewares / gifts",
+    "why": "Homewares shop on Brunswick St; search result shows site titled 'Coming Soon' and http only"
+  },
+  {
+    "segment": "B",
+    "business": "Outside the Box",
+    "website": "https://outsidethebox.gallery/",
+    "suburb": "New Farm",
+    "kind": "gifts / art",
+    "why": "Quirky gifts and art shop at 555 Brunswick St"
+  },
+  {
+    "segment": "B",
+    "business": "Musk Cafe & Bar",
+    "website": "https://muskcafeandbar.com.au/",
+    "suburb": "Teneriffe",
+    "kind": "cafe",
+    "why": "Specialty coffee and brunch at 108 Macquarie St"
+  },
+  {
+    "segment": "B",
+    "business": "Kin & Co",
+    "website": "https://www.kinandcocafe.com/",
+    "suburb": "Teneriffe",
+    "kind": "cafe",
+    "why": "Specialty coffee and seasonal food, 24 Macquarie St"
+  },
+  {
+    "segment": "B",
+    "business": "Samson & Sophie",
+    "website": "https://www.samsonandsophie.com.au/",
+    "suburb": "Teneriffe",
+    "kind": "cafe",
+    "why": "Dog-friendly cafe, 2 Macquarie St"
+  },
+  {
+    "segment": "B",
+    "business": "Aji Spice House",
+    "website": "https://ranunculus-glockenspiel-bw7m.squarespace.com/",
+    "suburb": "Teneriffe",
+    "kind": "cafe / restaurant",
+    "why": "Asian fusion cafe; site on unbranded default Squarespace URL"
+  },
+  {
+    "segment": "B",
+    "business": "Cult Coffee Brisbane",
+    "website": "https://www.cultbrisbane.com/",
+    "suburb": "Teneriffe",
+    "kind": "cafe",
+    "why": "New cafe at 113 Commercial Rd"
+  },
+  {
+    "segment": "B",
+    "business": "Blondee Salon",
+    "website": "https://www.blondee.com.au/newsteadsalon",
+    "suburb": "Newstead",
+    "kind": "hair salon",
+    "why": "Blonde/balayage salon at 33 Chester St"
+  },
+  {
+    "segment": "B",
+    "business": "Salon X Papas",
+    "website": "https://salonxpapas.com/",
+    "suburb": "Newstead",
+    "kind": "hair salon",
+    "why": "Award-winning salon at 18 Longland St"
+  },
+  {
+    "segment": "B",
+    "business": "Togninis",
+    "website": "https://togninishair.com/",
+    "suburb": "Newstead",
+    "kind": "hair salon",
+    "why": "Award-winning salon, Skyring Tce"
+  },
+  {
+    "segment": "B",
+    "business": "Salon Soleil by Winter",
+    "website": "https://winter-106535.square.site/",
+    "suburb": "Newstead",
+    "kind": "hair salon",
+    "why": "Blonde/extensions specialist; site on Square default subdomain"
+  },
+  {
+    "segment": "B",
+    "business": "Amarsi Barbers",
+    "website": "https://amarsibarbers.com.au/",
+    "suburb": "West End",
+    "kind": "barber",
+    "why": "Barber at 391 Montague Rd"
+  },
+  {
+    "segment": "B",
+    "business": "Kalon Amara Barbers",
+    "website": "https://kalonamarabarbershop.com.au/",
+    "suburb": "West End",
+    "kind": "barber",
+    "why": "Modern men's barbershop in West End"
+  },
+  {
+    "segment": "B",
+    "business": "JJ Barbers",
+    "website": "https://jjbarbersbrisbane.com.au/services/",
+    "suburb": "West End",
+    "kind": "barber",
+    "why": "Barber at 156 Boundary St"
+  },
+  {
+    "segment": "B",
+    "business": "Ingeborg Hair",
+    "website": "https://ingeborghair.com.au/",
+    "suburb": "Hawthorne",
+    "kind": "hair salon",
+    "why": "Full-service salon at 42 Jenolan Ave"
+  },
+  {
+    "segment": "B",
+    "business": "The Halo Room",
+    "website": "https://www.thehaloroom.com.au/",
+    "suburb": "Hawthorne",
+    "kind": "hair salon",
+    "why": "Boutique salon at 46 Lindsay St"
+  },
+  {
+    "segment": "B",
+    "business": "Solace Hair and Body",
+    "website": "https://www.solacehairandbody.com.au/",
+    "suburb": "Hawthorne",
+    "kind": "hair salon",
+    "why": "Salon at 38 Lindsay St"
+  },
+  {
+    "segment": "B",
+    "business": "Kaitlyn Wagner Hairdressing",
+    "website": "https://kaitlynwagner.com.au/",
+    "suburb": "Hawthorne",
+    "kind": "hair salon",
+    "why": "Blonde/balayage salon at 7 Lindsay St"
+  },
+  {
+    "segment": "B",
+    "business": "Gum Bistro",
+    "website": "https://www.gumbistro.com/",
+    "suburb": "West End",
+    "kind": "restaurant",
+    "why": "Casual bistro, Qld produce, 237 Boundary St"
+  },
+  {
+    "segment": "B",
+    "business": "Vela",
+    "website": "https://www.velabrisbane.com/",
+    "suburb": "West End",
+    "kind": "restaurant",
+    "why": "Modern Thai at West Village, 97 Boundary St"
+  },
+  {
+    "segment": "B",
+    "business": "Finish Beauty",
+    "website": "https://www.finishbeauty.me/",
+    "suburb": "Paddington",
+    "kind": "beauty salon",
+    "why": "Brow and lash lift specialist, 107 Latrobe Tce"
+  },
+  {
+    "segment": "B",
+    "business": "Sally Williams Beauty",
+    "website": "https://www.sallywilliamsbeauty.com/lashes-brows",
+    "suburb": "Paddington",
+    "kind": "beauty salon",
+    "why": "Lash and brow salon, 173 Latrobe Tce"
+  },
+  {
+    "segment": "B",
+    "business": "Maria Julio Beauty Studio",
+    "website": "https://www.mariajuliobeauty.studio/",
+    "suburb": "Paddington",
+    "kind": "beauty salon",
+    "why": "Cosmetic tattoo, lashes, skin at 244 Given Tce"
+  },
+  {
+    "segment": "B",
+    "business": "Made. By Jessika",
+    "website": "https://www.madebyjessika.com.au/",
+    "suburb": "Paddington",
+    "kind": "beauty salon",
+    "why": "Cosmetic tattoo/skin/brows, 18 Nash St; result title shows 'B Indulged Clinic' (name mismatch)"
+  },
+  {
+    "segment": "B",
+    "business": "Savile Row Bar",
+    "website": "https://www.savilerowbar.com.au/",
+    "suburb": "Fortitude Valley",
+    "kind": "bar",
+    "why": "Cocktail bar at 667 Ann St"
+  },
+  {
+    "segment": "B",
+    "business": "Jolly Roger Bar",
+    "website": "https://jollyrogerbar.com/",
+    "suburb": "Fortitude Valley",
+    "kind": "bar",
+    "why": "Pirate-themed rum bar in the Valley"
+  },
+  {
+    "segment": "B",
+    "business": "NOK NOK",
+    "website": "https://noknokbne.com.au/",
+    "suburb": "Fortitude Valley",
+    "kind": "bar",
+    "why": "Cocktail bar at 362 Brunswick St; search result shows domain titled with gambling spam ('JASATOTO99 SLOT') - possibly hijacked/expired"
+  },
+  {
+    "segment": "B",
+    "business": "Press Club",
+    "website": "https://pressclub.net.au/",
+    "suburb": "Fortitude Valley",
+    "kind": "bar",
+    "why": "Live music and cocktail bar, 339 Brunswick St"
+  },
+  {
+    "segment": "B",
+    "business": "Paddington Social",
+    "website": "https://paddingtonsocial.com.au/",
+    "suburb": "Paddington",
+    "kind": "cafe",
+    "why": "Cafe + Thai pop-up in Queenslander, 167 Given Tce"
+  },
+  {
+    "segment": "B",
+    "business": "Paddi",
+    "website": "https://www.paddi.com.au/",
+    "suburb": "Paddington",
+    "kind": "cafe",
+    "why": "Cafe at 233 Given Tce"
+  }
+]

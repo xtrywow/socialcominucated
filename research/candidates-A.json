@@ -1,0 +1,426 @@
+[
+  {
+    "segment": "A",
+    "business": "Gary Hamer Interior Design",
+    "website": "https://www.garyhamerinteriors.com.au/",
+    "suburb": "New Farm",
+    "kind": "interior designer",
+    "why": "Based in New Farm, 20+ yrs; furnishing homes/apartments, serves Teneriffe/New Farm/Newstead"
+  },
+  {
+    "segment": "A",
+    "business": "Erica Fanning Interiors",
+    "website": "https://www.ericafanninginteriors.com.au/",
+    "suburb": "New Farm",
+    "kind": "interior designer",
+    "why": "Bespoke residential interiors and high-end renovations; New Farm luxury interiors page"
+  },
+  {
+    "segment": "A",
+    "business": "Samantha Leigh Interiors",
+    "website": "https://www.samanthaleigh.com.au/",
+    "suburb": "New Farm",
+    "kind": "interior designer",
+    "why": "New Farm Residence project, reworked family home interior"
+  },
+  {
+    "segment": "A",
+    "business": "Blok Design",
+    "website": "https://www.blokdesign.com.au/",
+    "suburb": "Teneriffe",
+    "kind": "interior designer",
+    "why": "'Sophistication in Teneriffe' residential interiors project journal"
+  },
+  {
+    "segment": "A",
+    "business": "Flooring Bathrooms Interiors",
+    "website": "https://flooringbathroomsinteriors.com.au/",
+    "suburb": "New Farm",
+    "kind": "interior design boutique",
+    "why": "New Farm interior design boutique: bathrooms, kitchens, flooring"
+  },
+  {
+    "segment": "A",
+    "business": "Bowerbird Collections",
+    "website": "https://bowerbirdcollections.com/",
+    "suburb": "Paddington",
+    "kind": "interior designer and stylist",
+    "why": "Interior design and styling from a Paddington studio, 20+ yrs experience"
+  },
+  {
+    "segment": "A",
+    "business": "Claire Stevens Interior Design",
+    "website": "https://www.clairestevensid.com.au/",
+    "suburb": "Brisbane (Kangaroo Point projects)",
+    "kind": "interior designer",
+    "why": "Brisbane design studio, timeless projects incl. Kangaroo Point"
+  },
+  {
+    "segment": "A",
+    "business": "Ivy + Piper",
+    "website": "https://www.ivyandpiper.com.au/",
+    "suburb": "Hawthorne / Bulimba",
+    "kind": "interior designer",
+    "why": "Interior design studio servicing Hawthorne and Bulimba, residential and commercial"
+  },
+  {
+    "segment": "A",
+    "business": "Interior Solutions Brisbane",
+    "website": "https://www.interiorsolutionsbrisbane.com/",
+    "suburb": "Brisbane (Ascot, Bulimba, Hawthorne projects)",
+    "kind": "interior designer",
+    "why": "20+ yrs; Queenslander projects in Ascot, Bulimba, Hawthorne"
+  },
+  {
+    "segment": "A",
+    "business": "Marilena Baynes Interiors",
+    "website": "https://www.marilenabaynesinteriors.com/",
+    "suburb": "Bulimba",
+    "kind": "interior designer",
+    "why": "Bulimba-based designer for couples and families"
+  },
+  {
+    "segment": "A",
+    "business": "Rochele Interiors",
+    "website": "https://rocheleinteriors.com.au/",
+    "suburb": "Brisbane (Kangaroo Point projects)",
+    "kind": "interior designer",
+    "why": "Boutique interior design firm with Kangaroo Point projects"
+  },
+  {
+    "segment": "A",
+    "business": "Studio James Interiors",
+    "website": "https://www.studiojamesinteriors.com.au/",
+    "suburb": "Brisbane",
+    "kind": "interior designer and decorator",
+    "why": "Boutique Brisbane studio for residential interiors, styling and decoration"
+  },
+  {
+    "segment": "A",
+    "business": "Porch Light Interiors",
+    "website": "https://www.porchlightinteriors.com.au/",
+    "suburb": "East Brisbane (near Kangaroo Point)",
+    "kind": "interior designer and decorator",
+    "why": "East Brisbane interiors firm; West End apartment project"
+  },
+  {
+    "segment": "A",
+    "business": "Styled Property",
+    "website": "https://styledproperty.com.au/",
+    "suburb": "Brisbane",
+    "kind": "property stylist / home staging",
+    "why": "Property styling and home staging (vacant, occupied, partial) across Brisbane"
+  },
+  {
+    "segment": "A",
+    "business": "Brisbane Makeover Co.",
+    "website": "https://www.brisbanemakeover.com/",
+    "suburb": "Bulimba",
+    "kind": "home staging",
+    "why": "Award-winning home staging and styling to sell; Bulimba address (directory also lists renovations under same name - verify)"
+  },
+  {
+    "segment": "A",
+    "business": "Home Staging Brisbane",
+    "website": "https://www.homestagingbrisbane.com/",
+    "suburb": "Brisbane",
+    "kind": "home staging",
+    "why": "Home staging service in Brisbane"
+  },
+  {
+    "segment": "A",
+    "business": "The Styled House",
+    "website": "https://www.thestyledhouse.com.au/",
+    "suburb": "Brisbane",
+    "kind": "property stylist / home staging",
+    "why": "Furniture staging for occupied and vacant properties"
+  },
+  {
+    "segment": "A",
+    "business": "LUSH Property Styling",
+    "website": "https://www.lushpropertystyling.com.au/",
+    "suburb": "Brisbane / Bayside",
+    "kind": "property stylist / home staging",
+    "why": "Home and investment property styling, Brisbane and Bayside"
+  },
+  {
+    "segment": "A",
+    "business": "Osborne & Co",
+    "website": "https://www.osborneandco.com.au/",
+    "suburb": "Brisbane",
+    "kind": "property stylist",
+    "why": "'Style your property to sell' property styling service"
+  },
+  {
+    "segment": "A",
+    "business": "CU Design",
+    "website": "https://cudesign.com.au/",
+    "suburb": "Brisbane",
+    "kind": "property stylist / home staging",
+    "why": "Property styling and home staging Brisbane page"
+  },
+  {
+    "segment": "A",
+    "business": "Attn: Landscapes",
+    "website": "https://attnlandscapes.com/",
+    "suburb": "Wilston / Ascot",
+    "kind": "landscape designer",
+    "why": "Design-only studio led by Shannon Trevisiol; works Wilston, Ascot, Clayfield"
+  },
+  {
+    "segment": "A",
+    "business": "Clare James Landscape Design",
+    "website": "https://clarejames.com.au/",
+    "suburb": "Brisbane",
+    "kind": "landscape designer",
+    "why": "Award-winning Brisbane landscape and garden design studio"
+  },
+  {
+    "segment": "A",
+    "business": "Human Nature Landscapes",
+    "website": "https://humannaturelandscapes.com.au/",
+    "suburb": "Ascot / Morningside",
+    "kind": "landscape designer and builder",
+    "why": "Design, construct and care for landscapes; Ascot and Morningside pages; owner Garth, 18+ yrs"
+  },
+  {
+    "segment": "A",
+    "business": "Green Ink Garden Design",
+    "website": "https://greeninkgardendesign.com/",
+    "suburb": "Brisbane inner north",
+    "kind": "landscape designer",
+    "why": "Inner-north designer (Michelle de Winter); Bulimba poolside landscape project"
+  },
+  {
+    "segment": "A",
+    "business": "The Garden Guy",
+    "website": "https://www.gardenguy.net.au/",
+    "suburb": "Hawthorne",
+    "kind": "landscape design and gardening",
+    "why": "Landscape design and gardening in Hawthorne, Bulimba, Morningside"
+  },
+  {
+    "segment": "A",
+    "business": "Design Scapes",
+    "website": "https://designscapes.com.au/",
+    "suburb": "Brisbane",
+    "kind": "landscape designer",
+    "why": "Brisbane landscape design team; Bulimba floodplain design notes"
+  },
+  {
+    "segment": "A",
+    "business": "Boss Gardenscapes",
+    "website": "https://www.bossgardenscapes.com.au/",
+    "suburb": "Brisbane",
+    "kind": "landscape designer and builder",
+    "why": "Family-owned garden creation; projects in Wilston and Ascot"
+  },
+  {
+    "segment": "A",
+    "business": "DS Architecture",
+    "website": "https://dsarchitecture.com.au/",
+    "suburb": "Brisbane (Bulimba projects)",
+    "kind": "residential renovation architect",
+    "why": "Residential renovation architects; several Bulimba Queenslander renovations"
+  },
+  {
+    "segment": "A",
+    "business": "Shane Marsh Architect",
+    "website": "https://shanemarsh.com.au/",
+    "suburb": "New Farm",
+    "kind": "residential architect",
+    "why": "Residential and renovation architect for Brisbane, New Farm and inner-city suburbs"
+  },
+  {
+    "segment": "A",
+    "business": "Studio 15b",
+    "website": "https://www.studio15b.com.au/",
+    "suburb": "New Farm",
+    "kind": "architecture and interior practice",
+    "why": "Boutique New Farm practice founded 2013 by Allison Smith"
+  },
+  {
+    "segment": "A",
+    "business": "PLOT Architecture",
+    "website": "https://www.plotarchitecture.com.au/",
+    "suburb": "Paddington",
+    "kind": "residential architect",
+    "why": "Paddington studio focused on single residential projects"
+  },
+  {
+    "segment": "A",
+    "business": "Quorum Studios",
+    "website": "https://www.qstudio.au/",
+    "suburb": "Hamilton / Ascot",
+    "kind": "residential architect",
+    "why": "Queenslander renovations and character transformations in Hamilton and Ascot"
+  },
+  {
+    "segment": "A",
+    "business": "FOLAR",
+    "website": "https://folar.com.au/",
+    "suburb": "Fortitude Valley",
+    "kind": "architecture and interior practice",
+    "why": "Award-winning residential practice at Brunswick St, Fortitude Valley"
+  },
+  {
+    "segment": "A",
+    "business": "BAASTUDIO Architecture",
+    "website": "https://www.baastudio.com.au/",
+    "suburb": "Brisbane",
+    "kind": "residential architect",
+    "why": "Residential architect: new houses, renovations, extensions"
+  },
+  {
+    "segment": "A",
+    "business": "Bishop Construction",
+    "website": "https://bishopconstruction.com.au/",
+    "suburb": "Brisbane (Bulimba, Teneriffe pages)",
+    "kind": "renovation builder",
+    "why": "Family-owned 20 yrs; Queenslander renos, extensions, bathrooms in Bulimba/Teneriffe"
+  },
+  {
+    "segment": "A",
+    "business": "Manttan Construction",
+    "website": "https://manttanconstruction.com.au/",
+    "suburb": "Brisbane (Bulimba page)",
+    "kind": "renovation builder",
+    "why": "Home renovations and extensions in Bulimba, kitchens and layouts"
+  },
+  {
+    "segment": "A",
+    "business": "Yates Builders",
+    "website": "https://yatesbuilders.com.au/",
+    "suburb": "Brisbane (Bulimba, Rosalie pages)",
+    "kind": "custom home builder",
+    "why": "Family-owned multi-award luxury custom homes; Bulimba and Rosalie"
+  },
+  {
+    "segment": "A",
+    "business": "Rise Build",
+    "website": "https://www.risebuild.com.au/",
+    "suburb": "Brisbane (Bulimba page)",
+    "kind": "builder",
+    "why": "Bulimba builder building services"
+  },
+  {
+    "segment": "A",
+    "business": "HnT Constructions",
+    "website": "https://www.hnt.com.au/",
+    "suburb": "Brisbane (Bulimba page)",
+    "kind": "custom home builder",
+    "why": "Luxury custom home builder, Bulimba"
+  },
+  {
+    "segment": "A",
+    "business": "Linear Design + Construct",
+    "website": "https://www.linearconstructions.com.au/",
+    "suburb": "Ascot",
+    "kind": "renovation builder",
+    "why": "Home renovation builders in Ascot"
+  },
+  {
+    "segment": "A",
+    "business": "JDL Construction",
+    "website": "https://jdlconstruction.com.au/",
+    "suburb": "Brisbane",
+    "kind": "renovation builder",
+    "why": "Queenslander and character home renovations, custom new homes"
+  },
+  {
+    "segment": "A",
+    "business": "DC Luxury Homes",
+    "website": "https://dcluxuryhomes.com.au/",
+    "suburb": "Paddington / Red Hill",
+    "kind": "custom home and renovation builder",
+    "why": "High-end custom homes and renovations for Paddington, Red Hill, West End"
+  },
+  {
+    "segment": "A",
+    "business": "Unique Design Kitchens & Bathrooms",
+    "website": "https://www.uniquedesign.net.au/",
+    "suburb": "Red Hill",
+    "kind": "kitchen and bathroom renovator",
+    "why": "Bathroom and kitchen renovations, Red Hill page"
+  },
+  {
+    "segment": "A",
+    "business": "Creative Tiling QLD",
+    "website": "https://creativetiling.com.au/",
+    "suburb": "Brisbane (Teneriffe page)",
+    "kind": "bathroom renovator",
+    "why": "Teneriffe apartment bathroom renovations, one team every trade"
+  },
+  {
+    "segment": "A",
+    "business": "TAP Bathrooms",
+    "website": "https://tapbathrooms.com/",
+    "suburb": "Brisbane inner city",
+    "kind": "bathroom renovator",
+    "why": "Specialist bathroom builder 25+ yrs servicing inner-city Brisbane"
+  },
+  {
+    "segment": "A",
+    "business": "Gecko Kitchens",
+    "website": "https://www.geckokitchens.com.au/",
+    "suburb": "Upper Kedron (services Albion, Newstead)",
+    "kind": "kitchen designer and cabinet maker",
+    "why": "Custom kitchens, laundries, wardrobes; services Albion and Newstead"
+  },
+  {
+    "segment": "A",
+    "business": "Emily McKenzie Interiors",
+    "website": "https://www.emilymckenzie.com/",
+    "suburb": "Brisbane",
+    "kind": "kitchen designer / custom joinery",
+    "why": "Award-winning Brisbane kitchen designer, custom joinery for builds and renos"
+  },
+  {
+    "segment": "A",
+    "business": "Arete Joinery",
+    "website": "https://aretejoinery.com.au/",
+    "suburb": "Northgate",
+    "kind": "custom joinery",
+    "why": "Bespoke cabinet making from Northgate workshop; works with architects in Windsor"
+  },
+  {
+    "segment": "A",
+    "business": "Create Joinery",
+    "website": "https://createjoinery.com.au/",
+    "suburb": "Brisbane",
+    "kind": "custom joinery",
+    "why": "Bespoke cabinetry for kitchens, wardrobes, living spaces"
+  },
+  {
+    "segment": "A",
+    "business": "Ecozen Pools and Landscapes",
+    "website": "https://ecozen.com.au/",
+    "suburb": "Brisbane (Bulimba page)",
+    "kind": "pool builder",
+    "why": "Family-owned luxury pools and landscape construction incl. Bulimba"
+  },
+  {
+    "segment": "A",
+    "business": "Just Add Water Pools",
+    "website": "https://justaddwaterpools.com.au/",
+    "suburb": "Brisbane (Hamilton project)",
+    "kind": "pool builder",
+    "why": "Luxury concrete pool project in Hamilton"
+  },
+  {
+    "segment": "A",
+    "business": "Brisbane Pools and Landscapes",
+    "website": "https://www.brisbanepoolsandlandscapes.com.au/",
+    "suburb": "Brisbane",
+    "kind": "pool builder",
+    "why": "Luxury pool builder Brisbane, new pools and landscapes"
+  },
+  {
+    "segment": "A",
+    "business": "Norfolk Pools",
+    "website": "https://www.norfolkpools.com.au/",
+    "suburb": "Brisbane",
+    "kind": "pool builder",
+    "why": "40+ yrs building concrete and plunge pools in Brisbane"
+  }
+]

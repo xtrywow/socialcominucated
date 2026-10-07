@@ -45,25 +45,7 @@
   "require_social": false,
   "pagespeed": false,
   "regions": [
-    "Brisbane",
-    "Moreton Bay",
-    "Logan",
-    "Redlands",
-    "Ipswich",
-    "Gold Coast",
-    "Sunshine Coast",
-    "Toowoomba",
-    "Cairns",
-    "Townsville",
-    "Mackay",
-    "Rockhampton",
-    "Bundaberg",
-    "Hervey Bay",
-    "Gladstone",
-    "Airlie Beach",
-    "Gympie",
-    "Warwick",
-    "Maryborough"
+    "Logan"
   ],
-  "workbook": "results/AceAds-DM-outreach-Queensland-full.xlsx"
+  "workbook": "results/AceAds-DM-outreach-Logan.xlsx"
 }

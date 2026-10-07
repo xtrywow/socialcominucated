@@ -1,0 +1,54 @@
+You are researching prospects for AceAds (aceads.au), a Brisbane studio: real estate and hospitality photography, video, CASA-accredited drone, and small websites (the "Founding Site"). Public name: Daniel Mehr. This is research only.
+
+## THIS RUN
+- Date: today (Brisbane time).
+- Input: leads\email-batches-ranked\ranked-003.csv (80 businesses, already ranked). Work through every row in order. Do not search for other businesses.
+- Output: leads\research-ranked-003.csv and leads\research-ranked-003-summary.md
+- Each row's "notes" column is a lead from an automated check, not a fact: confirm everything on the business's own site.
+- Other windows may be working on other ranked files at the same time. Only read your own input file and only write your own two output files.
+
+## Hard rules (break one and the row is useless)
+1. Do not contact anyone. No email, no DM, no form submission, no sign-up, no login to any account, no calls.
+2. An email address is usable only if it is published on the business's own website (contact page, footer, about page) or on its own group's website. Not from directories, Google, Facebook, Instagram, ABN lookups, data brokers, or guessing a pattern. Record the exact page URL where you saw it. If the site hides the address behind a form only, record "form only" and no email.
+3. Skip any address the site says not to use for marketing ("no solicitations", "no unsolicited emails", "suppliers only", "careers only"). Record it in the summary instead.
+4. Work business by business. Open one business's own site, read it, record the row, then move to the next. Do not build or run a script or tool whose purpose is collecting email addresses in bulk (Australia's Spam Act prohibits address-harvesting software). Fetching a business's own contact page to read it is fine.
+5. Every detail you write must be something you saw, with its URL. No invented projects, awards, dishes, or claims about their website. Instagram only if the profile opens without logging in; otherwise use their own site.
+6. Read-only on the project. You may read the files below. You write only the two output files above. Do not edit any other file in D:\aceads.
+
+## Who to EXCLUDE
+- Already contacted or already known. Check and skip anything that appears in:
+  - outreach.md (section 7 "Do-not-contact" and section 8 "Prospect state table")
+  - queue\approvals.md (every business with a drafted email)
+  - agent\data\register.json (names and Instagram handles)
+  - leads\ (every .xlsx and .csv already there, including aceads-dm-list.csv and any research-ranked-*.csv already written: match on website domain and on business name)
+- Competitors: photographers, videographers, content creators, drone operators, marketing, social media or web design agencies.
+- National chains and franchises. Small local groups of 2 to 6 venues are fine: list the group once.
+- Closed, "permanently closed", or sites that no longer load.
+- Anything outside Queensland. Segment A and C must be inside the shoot area: Brisbane, Gold Coast, Sunshine Coast.
+
+## Segments (the input file already says which; correct it if the site shows otherwise)
+- A, complementary (their finished work needs good photos and video): real estate agents, property stylists, interior designers, builders and renovators, landscape designers, architects and building designers, pool builders, joinery and cabinet makers. Record one specific recent detail from their own site (a named project, the suburb of a recent job, an award with year). Prefer work from the last 12 months; write the date if the site shows one.
+- B, weak website (website offer): qualify only if the site loads AND has at least one concrete, visible problem you can describe in one plain sentence, e.g. free subdomain (wixsite, square.site, business.site), no mobile layout, broken contact form, copyright year 3+ years old, booking page only with no about/hours/address, missing opening hours, broken links, "Not secure" (no HTTPS). Never write "outdated" or "ugly". Record the exact problem and the URL where you saw it. If the site has no real problem, move the row to the segment that fits or drop it.
+- C, venues (content offer: a shoot day plus a month of posts): restaurants, bars, cafes, bakeries, delis, boutique hotels, jewellers, boutique retail. Prefer an events, marketing, media or general address over bookings/reservations; take a bookings address only if it is the only one and say so in notes. Several venues of one group = one row. Record one specific detail (signature dish, courtyard, rooftop, open kitchen, an event series) with its URL.
+- D, site is fine (offer: photos/video of premises, team and work): record one specific detail with its URL.
+- Health services (clinics, dentists, physio, allied health): fine to record, but write "HEALTH" in notes; no therapeutic claims will be used in any email.
+
+## Output 1: leads\research-ranked-003.csv
+UTF-8, comma-separated, header row:
+segment,fit,business,group_or_venues,suburb,region,website,email,email_source_url,contact_first_name,phone,instagram,detail,detail_source_url,weakness,weakness_source_url,notes,checked_at
+- contact_first_name only when the site names the person next to that email; otherwise blank.
+- weakness only for Segment B.
+- checked_at = date and time you read the page, Brisbane time (AEST), e.g. 2026-10-07 14:05.
+- fit = 1 to 3: 3 = clear reason to contact now (a project, opening, renovation or award in the last 6 months, or a site problem a customer would hit), 2 = good fit, 1 = fits but nothing timely.
+- Rows you could not verify (site dead, no email and no form, excluded) do NOT go in this file; they go in the summary.
+- Sort by segment, then fit descending.
+
+## Output 2: leads\research-ranked-003-summary.md
+Counts per segment and region; how many had an email, how many "form only"; what you excluded and why (one line per reason with a count, and the business names); anything uncertain.
+
+## Quality check before you finish
+- Re-open a random 10% of rows and confirm the email still appears on email_source_url.
+- No duplicate emails or websites in the file, and none already in the excluded files.
+- No competitor and no chain slipped in.
+- Every row has a detail with a URL.
+If fewer than 80 rows pass every rule, stop there and say so. Good rows beat doubtful ones.

@@ -12,7 +12,7 @@ You are researching prospects for **AceAds** (aceads.au), a Brisbane studio: rea
 - Area this week: Brisbane inner north and east (Fortitude Valley, New Farm, Teneriffe, Newstead, Paddington, Rosalie, West End, Bulimba, Hawthorne). Next areas in later batches: Brisbane south and west, Gold Coast (Burleigh, Palm Beach, Broadbeach, Miami), Sunshine Coast (Noosa, Mooloolaba, Maroochydore, Buderim).
 
 ## Start from the candidate list
-`leads\candidates-YYYY-MM-DD.csv` already lists businesses found by web search for this batch (segment, business, website, suburb, a note from the search). Work through it first: open each business's own site, check it against every rule below, and drop any that fail. Search for more only if you are short of the target after that. The search notes are leads, not facts: confirm everything on the business's own site.
+`leads\candidates-YYYY-MM-DD.csv` already lists businesses found by web search for this batch (segment, business, website, suburb, a note from the search). Work through it first: open each business's own site, check it against every rule below, and drop any that fail. Search for more only if you are short of the target after that. For the Queensland-wide run, use one file from `leads\email-batches\batch-NNN.csv` per run instead (80 businesses each, highest priority first) and name the output after it, e.g. `research-batch-001.csv`. Fill the `fit` column and leave rows you could not verify out of the output. The search notes are leads, not facts: confirm everything on the business's own site.
 
 ## Hard rules (break one and the row is useless)
 1. **Do not contact anyone.** No email, no DM, no form submission, no sign-up, no login to any account, no calls.

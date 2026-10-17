@@ -1,0 +1,15 @@
+# dependencies (directory or symlink)
+node_modules
+node_modules/
+# renders / bundles
+out/
+build/
+# private media: never commit his photo or his voice
+public/img/portrait*
+public/audio/voice*
+*.raw.wav
+*voice*.wav
+*voice*.mp3
+*voice*.m4a
+*voice*.flac
+raw/

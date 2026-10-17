@@ -1,0 +1,25 @@
+{
+  "name": "motion-intro",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "studio": "remotion studio",
+    "render:16x9": "remotion render Intro-16x9 out/intro-16x9.mp4 --crf=18",
+    "render:9x16": "remotion render Intro-9x16 out/intro-9x16.mp4 --crf=18",
+    "cover": "remotion still Intro-16x9 out/cover-16x9.png --frame=2690 && remotion still Intro-9x16 out/cover-9x16.png --frame=2690"
+  },
+  "dependencies": {
+    "@fontsource/vazirmatn": "^5.3.0",
+    "@remotion/cli": "4.0.536",
+    "@remotion/shapes": "4.0.536",
+    "@remotion/transitions": "4.0.536",
+    "lucide-react": "0.460.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "remotion": "4.0.536"
+  },
+  "devDependencies": {
+    "@types/react": "^18",
+    "typescript": "^7.0.2"
+  }
+}

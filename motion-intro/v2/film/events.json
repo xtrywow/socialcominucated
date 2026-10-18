@@ -1,0 +1,877 @@
+{
+ "fps": 30,
+ "durationInFrames": 900,
+ "musicHits": {
+  "click": 270,
+  "endCard": 690
+ },
+ "totals": {
+  "leadsReleased": 69,
+  "handoffHopsAll": 264,
+  "heapLandingsAll": 63,
+  "travelSeconds": 3.108
+ },
+ "events": [
+  {
+   "frame": 11,
+   "t": 0.367,
+   "type": "lost_lead_drop",
+   "id": "content"
+  },
+  {
+   "frame": 17,
+   "t": 0.567,
+   "type": "text",
+   "id": "site",
+   "note": "سایت داری."
+  },
+  {
+   "frame": 24,
+   "t": 0.8,
+   "type": "lost_lead_drop",
+   "id": "social"
+  },
+  {
+   "frame": 42,
+   "t": 1.4,
+   "type": "lost_lead_drop",
+   "id": "social"
+  },
+  {
+   "frame": 57,
+   "t": 1.9,
+   "type": "lost_lead_drop",
+   "id": "social"
+  },
+  {
+   "frame": 57,
+   "t": 1.9,
+   "type": "text",
+   "id": "page",
+   "note": "پیج داری."
+  },
+  {
+   "frame": 67,
+   "t": 2.233,
+   "type": "lost_lead_drop",
+   "id": "seo"
+  },
+  {
+   "frame": 78,
+   "t": 2.6,
+   "type": "lost_lead_drop",
+   "id": "social"
+  },
+  {
+   "frame": 93,
+   "t": 3.1,
+   "type": "lost_lead_drop",
+   "id": "seo"
+  },
+  {
+   "frame": 96,
+   "t": 3.2,
+   "type": "text",
+   "id": "ads",
+   "note": "تبلیغ هم می‌کنی..."
+  },
+  {
+   "frame": 98,
+   "t": 3.267,
+   "type": "lost_lead_hero_rattle",
+   "id": "ads",
+   "note": "rattles down the unplugged megaphone"
+  },
+  {
+   "frame": 102,
+   "t": 3.4,
+   "type": "lost_lead_drop",
+   "id": "content"
+  },
+  {
+   "frame": 116,
+   "t": 3.867,
+   "type": "lost_lead_drop",
+   "id": "content"
+  },
+  {
+   "frame": 120,
+   "t": 4,
+   "type": "lost_lead_hero_drop",
+   "id": "ads"
+  },
+  {
+   "frame": 134,
+   "t": 4.467,
+   "type": "lost_lead_drop",
+   "id": "seo"
+  },
+  {
+   "frame": 147,
+   "t": 4.9,
+   "type": "lost_lead_drop",
+   "id": "content"
+  },
+  {
+   "frame": 154,
+   "t": 5.133,
+   "type": "text",
+   "id": "seen",
+   "note": "دیده می‌شی..."
+  },
+  {
+   "frame": 170,
+   "t": 5.667,
+   "type": "lost_lead_drop",
+   "id": "seo"
+  },
+  {
+   "frame": 183,
+   "t": 6.1,
+   "type": "lost_lead_drop",
+   "id": "social"
+  },
+  {
+   "frame": 200,
+   "t": 6.667,
+   "type": "text",
+   "id": "sell",
+   "note": "ولی نمی‌فروشی."
+  },
+  {
+   "frame": 203,
+   "t": 6.767,
+   "type": "lost_lead_drop",
+   "id": "content"
+  },
+  {
+   "frame": 222,
+   "t": 7.4,
+   "type": "lost_lead_drop",
+   "id": "social"
+  },
+  {
+   "frame": 270,
+   "t": 9,
+   "type": "plinth_lock",
+   "id": "plinth",
+   "note": "base + backplate spring up on the music hit"
+  },
+  {
+   "frame": 277,
+   "t": 9.233,
+   "type": "part_lock",
+   "id": "web"
+  },
+  {
+   "frame": 284,
+   "t": 9.467,
+   "type": "part_lock",
+   "id": "seo"
+  },
+  {
+   "frame": 285,
+   "t": 9.5,
+   "type": "text",
+   "id": "connect",
+   "note": "من این تیکه‌ها رو به هم وصل می‌کنم."
+  },
+  {
+   "frame": 291,
+   "t": 9.7,
+   "type": "part_lock",
+   "id": "content"
+  },
+  {
+   "frame": 298,
+   "t": 9.933,
+   "type": "part_lock",
+   "id": "social"
+  },
+  {
+   "frame": 301,
+   "t": 10.033,
+   "type": "first_lead_release",
+   "id": "lead0",
+   "note": "lobbed in from off-frame left"
+  },
+  {
+   "frame": 305,
+   "t": 10.167,
+   "type": "floor_ripple",
+   "id": "floor",
+   "note": "hairline gold ring, 75 frames"
+  },
+  {
+   "frame": 305,
+   "t": 10.167,
+   "type": "part_lock",
+   "id": "ads"
+  },
+  {
+   "frame": 308,
+   "t": 10.267,
+   "type": "wobble_peak",
+   "id": "machine",
+   "note": "peak 1.33 deg, settles by ~341"
+  },
+  {
+   "frame": 318,
+   "t": 10.6,
+   "type": "first_lead_bell_entry",
+   "id": "lead0"
+  },
+  {
+   "frame": 318,
+   "t": 10.6,
+   "type": "module_power_on",
+   "id": "ads"
+  },
+  {
+   "frame": 327,
+   "t": 10.9,
+   "type": "handoff_hop",
+   "id": "ads>social",
+   "note": "lead 0"
+  },
+  {
+   "frame": 327,
+   "t": 10.9,
+   "type": "module_power_on",
+   "id": "social"
+  },
+  {
+   "frame": 355,
+   "t": 11.833,
+   "type": "module_power_on",
+   "id": "content"
+  },
+  {
+   "frame": 383,
+   "t": 12.767,
+   "type": "module_power_on",
+   "id": "seo"
+  },
+  {
+   "frame": 387,
+   "t": 12.9,
+   "type": "text",
+   "id": "system",
+   "note": "یه سیستم."
+  },
+  {
+   "frame": 394,
+   "t": 13.133,
+   "type": "module_power_on",
+   "id": "web"
+  },
+  {
+   "frame": 400,
+   "t": 13.333,
+   "type": "handoff_hop",
+   "id": "ads>social",
+   "note": "lead 4"
+  },
+  {
+   "frame": 401,
+   "t": 13.367,
+   "type": "heap_landing",
+   "id": "web",
+   "note": "lead 0"
+  },
+  {
+   "frame": 422,
+   "t": 14.067,
+   "type": "handoff_hop",
+   "id": "ads>social",
+   "note": "lead 7"
+  },
+  {
+   "frame": 443,
+   "t": 14.767,
+   "type": "handoff_hop",
+   "id": "social>content",
+   "note": "lead 6"
+  },
+  {
+   "frame": 453,
+   "t": 15.1,
+   "type": "handoff_hop",
+   "id": "social>content",
+   "note": "lead 8"
+  },
+  {
+   "frame": 461,
+   "t": 15.367,
+   "type": "handoff_hop",
+   "id": "ads>social",
+   "note": "lead 14"
+  },
+  {
+   "frame": 464,
+   "t": 15.467,
+   "type": "heap_landing",
+   "id": "web",
+   "note": "lead 2"
+  },
+  {
+   "frame": 470,
+   "t": 15.667,
+   "type": "heap_landing",
+   "id": "web",
+   "note": "lead 3"
+  },
+  {
+   "frame": 472,
+   "t": 15.733,
+   "type": "handoff_hop",
+   "id": "social>content",
+   "note": "lead 11"
+  },
+  {
+   "frame": 478,
+   "t": 15.933,
+   "type": "heap_landing",
+   "id": "web",
+   "note": "lead 5"
+  },
+  {
+   "frame": 482,
+   "t": 16.067,
+   "type": "day_to_night_start"
+  },
+  {
+   "frame": 483,
+   "t": 16.1,
+   "type": "handoff_hop",
+   "id": "seo>web",
+   "note": "lead 6"
+  },
+  {
+   "frame": 487,
+   "t": 16.233,
+   "type": "text",
+   "id": "ai",
+   "note": "سیستمی که با هوش مصنوعی، شبانه‌روز برات مشتری پیدا می‌کنه."
+  },
+  {
+   "frame": 490,
+   "t": 16.333,
+   "type": "heap_landing",
+   "id": "web",
+   "note": "lead 6"
+  },
+  {
+   "frame": 492,
+   "t": 16.4,
+   "type": "handoff_hop",
+   "id": "seo>web",
+   "note": "lead 8"
+  },
+  {
+   "frame": 500,
+   "t": 16.667,
+   "type": "heap_landing",
+   "id": "web",
+   "note": "lead 8"
+  },
+  {
+   "frame": 501,
+   "t": 16.7,
+   "type": "handoff_hop",
+   "id": "content>seo",
+   "note": "lead 11"
+  },
+  {
+   "frame": 508,
+   "t": 16.933,
+   "type": "heap_landing",
+   "id": "web",
+   "note": "lead 10"
+  },
+  {
+   "frame": 511,
+   "t": 17.033,
+   "type": "handoff_hop",
+   "id": "seo>web",
+   "note": "lead 11"
+  },
+  {
+   "frame": 519,
+   "t": 17.3,
+   "type": "heap_landing",
+   "id": "web",
+   "note": "lead 11"
+  },
+  {
+   "frame": 520,
+   "t": 17.333,
+   "type": "handoff_hop",
+   "id": "seo>web",
+   "note": "lead 13"
+  },
+  {
+   "frame": 527,
+   "t": 17.567,
+   "type": "heap_landing",
+   "id": "web",
+   "note": "lead 13"
+  },
+  {
+   "frame": 531,
+   "t": 17.7,
+   "type": "handoff_hop",
+   "id": "seo>web",
+   "note": "lead 15"
+  },
+  {
+   "frame": 534,
+   "t": 17.8,
+   "type": "heap_landing",
+   "id": "web",
+   "note": "lead 14"
+  },
+  {
+   "frame": 540,
+   "t": 18,
+   "type": "handoff_hop",
+   "id": "content>seo",
+   "note": "lead 18"
+  },
+  {
+   "frame": 542,
+   "t": 18.067,
+   "type": "heap_landing",
+   "id": "web",
+   "note": "lead 16"
+  },
+  {
+   "frame": 547,
+   "t": 18.233,
+   "type": "handoff_hop",
+   "id": "social>content",
+   "note": "lead 25"
+  },
+  {
+   "frame": 550,
+   "t": 18.333,
+   "type": "heap_landing",
+   "id": "web",
+   "note": "lead 17"
+  },
+  {
+   "frame": 555,
+   "t": 18.5,
+   "type": "handoff_hop",
+   "id": "ads>social",
+   "note": "lead 32"
+  },
+  {
+   "frame": 561,
+   "t": 18.7,
+   "type": "heap_landing",
+   "id": "web",
+   "note": "lead 19"
+  },
+  {
+   "frame": 563,
+   "t": 18.767,
+   "type": "handoff_hop",
+   "id": "ads>social",
+   "note": "lead 34"
+  },
+  {
+   "frame": 570,
+   "t": 19,
+   "type": "heap_landing",
+   "id": "web",
+   "note": "lead 21"
+  },
+  {
+   "frame": 573,
+   "t": 19.1,
+   "type": "handoff_hop",
+   "id": "ads>social",
+   "note": "lead 36"
+  },
+  {
+   "frame": 577,
+   "t": 19.233,
+   "type": "heap_landing",
+   "id": "web",
+   "note": "lead 22"
+  },
+  {
+   "frame": 582,
+   "t": 19.4,
+   "type": "handoff_hop",
+   "id": "seo>web",
+   "note": "lead 24"
+  },
+  {
+   "frame": 588,
+   "t": 19.6,
+   "type": "heap_landing",
+   "id": "web",
+   "note": "lead 24"
+  },
+  {
+   "frame": 592,
+   "t": 19.733,
+   "type": "handoff_hop",
+   "id": "content>seo",
+   "note": "lead 28"
+  },
+  {
+   "frame": 593,
+   "t": 19.767,
+   "type": "heap_landing",
+   "id": "web",
+   "note": "lead 25"
+  },
+  {
+   "frame": 599,
+   "t": 19.967,
+   "type": "handoff_hop",
+   "id": "social>content",
+   "note": "lead 36"
+  },
+  {
+   "frame": 604,
+   "t": 20.133,
+   "type": "heap_landing",
+   "id": "web",
+   "note": "lead 27"
+  },
+  {
+   "frame": 609,
+   "t": 20.3,
+   "type": "handoff_hop",
+   "id": "ads>social",
+   "note": "lead 42"
+  },
+  {
+   "frame": 614,
+   "t": 20.467,
+   "type": "heap_landing",
+   "id": "web",
+   "note": "lead 29"
+  },
+  {
+   "frame": 616,
+   "t": 20.533,
+   "type": "handoff_hop",
+   "id": "seo>web",
+   "note": "lead 31"
+  },
+  {
+   "frame": 618,
+   "t": 20.6,
+   "type": "heap_landing",
+   "id": "web",
+   "note": "lead 30"
+  },
+  {
+   "frame": 624,
+   "t": 20.8,
+   "type": "handoff_hop",
+   "id": "ads>social",
+   "note": "lead 45"
+  },
+  {
+   "frame": 627,
+   "t": 20.9,
+   "type": "heap_landing",
+   "id": "web",
+   "note": "lead 32"
+  },
+  {
+   "frame": 631,
+   "t": 21.033,
+   "type": "heap_landing",
+   "id": "web",
+   "note": "lead 33"
+  },
+  {
+   "frame": 633,
+   "t": 21.1,
+   "type": "handoff_hop",
+   "id": "ads>social",
+   "note": "lead 47"
+  },
+  {
+   "frame": 640,
+   "t": 21.333,
+   "type": "heap_landing",
+   "id": "web",
+   "note": "lead 35"
+  },
+  {
+   "frame": 644,
+   "t": 21.467,
+   "type": "handoff_hop",
+   "id": "content>seo",
+   "note": "lead 38"
+  },
+  {
+   "frame": 650,
+   "t": 21.667,
+   "type": "day_to_night_end"
+  },
+  {
+   "frame": 650,
+   "t": 21.667,
+   "type": "heap_landing",
+   "id": "web",
+   "note": "lead 37"
+  },
+  {
+   "frame": 653,
+   "t": 21.767,
+   "type": "handoff_hop",
+   "id": "content>seo",
+   "note": "lead 40"
+  },
+  {
+   "frame": 660,
+   "t": 22,
+   "type": "handoff_hop",
+   "id": "ads>social",
+   "note": "lead 52"
+  },
+  {
+   "frame": 662,
+   "t": 22.067,
+   "type": "heap_landing",
+   "id": "web",
+   "note": "lead 38"
+  },
+  {
+   "frame": 670,
+   "t": 22.333,
+   "type": "heap_landing",
+   "id": "web",
+   "note": "lead 40"
+  },
+  {
+   "frame": 671,
+   "t": 22.367,
+   "type": "handoff_hop",
+   "id": "ads>social",
+   "note": "lead 53"
+  },
+  {
+   "frame": 677,
+   "t": 22.567,
+   "type": "heap_landing",
+   "id": "web",
+   "note": "lead 41"
+  },
+  {
+   "frame": 682,
+   "t": 22.733,
+   "type": "handoff_hop",
+   "id": "social>content",
+   "note": "lead 51"
+  },
+  {
+   "frame": 686,
+   "t": 22.867,
+   "type": "heap_landing",
+   "id": "web",
+   "note": "lead 43"
+  },
+  {
+   "frame": 690,
+   "t": 23,
+   "type": "end_card_hit",
+   "id": "end",
+   "note": "cut + pull-back on the part-B bass hit"
+  },
+  {
+   "frame": 690,
+   "t": 23,
+   "type": "handoff_hop",
+   "id": "seo>web",
+   "note": "lead 45"
+  },
+  {
+   "frame": 697,
+   "t": 23.233,
+   "type": "heap_landing",
+   "id": "web",
+   "note": "lead 45"
+  },
+  {
+   "frame": 702,
+   "t": 23.4,
+   "type": "handoff_hop",
+   "id": "social>content",
+   "note": "lead 54"
+  },
+  {
+   "frame": 702,
+   "t": 23.4,
+   "type": "heap_landing",
+   "id": "web",
+   "note": "lead 46"
+  },
+  {
+   "frame": 702,
+   "t": 23.4,
+   "type": "name_reveal",
+   "id": "name"
+  },
+  {
+   "frame": 709,
+   "t": 23.633,
+   "type": "heap_landing",
+   "id": "web",
+   "note": "lead 48"
+  },
+  {
+   "frame": 715,
+   "t": 23.833,
+   "type": "handoff_hop",
+   "id": "content>seo",
+   "note": "lead 52"
+  },
+  {
+   "frame": 717,
+   "t": 23.9,
+   "type": "heap_landing",
+   "id": "web",
+   "note": "lead 49"
+  },
+  {
+   "frame": 727,
+   "t": 24.233,
+   "type": "handoff_hop",
+   "id": "content>seo",
+   "note": "lead 53"
+  },
+  {
+   "frame": 728,
+   "t": 24.267,
+   "type": "heap_landing",
+   "id": "web",
+   "note": "lead 51"
+  },
+  {
+   "frame": 732,
+   "t": 24.4,
+   "type": "heap_landing",
+   "id": "web",
+   "note": "lead 52"
+  },
+  {
+   "frame": 739,
+   "t": 24.633,
+   "type": "handoff_hop",
+   "id": "social>content",
+   "note": "lead 58"
+  },
+  {
+   "frame": 748,
+   "t": 24.933,
+   "type": "heap_landing",
+   "id": "web",
+   "note": "lead 54"
+  },
+  {
+   "frame": 750,
+   "t": 25,
+   "type": "linkedin_pill",
+   "id": "pill"
+  },
+  {
+   "frame": 755,
+   "t": 25.167,
+   "type": "handoff_hop",
+   "id": "seo>web",
+   "note": "lead 55"
+  },
+  {
+   "frame": 760,
+   "t": 25.333,
+   "type": "url_line",
+   "id": "url"
+  },
+  {
+   "frame": 768,
+   "t": 25.6,
+   "type": "handoff_hop",
+   "id": "content>seo",
+   "note": "lead 58"
+  },
+  {
+   "frame": 772,
+   "t": 25.733,
+   "type": "signature",
+   "id": "sig"
+  },
+  {
+   "frame": 773,
+   "t": 25.767,
+   "type": "heap_landing",
+   "id": "web",
+   "note": "lead 56"
+  },
+  {
+   "frame": 779,
+   "t": 25.967,
+   "type": "heap_landing",
+   "id": "web",
+   "note": "lead 57"
+  },
+  {
+   "frame": 780,
+   "t": 26,
+   "type": "handoff_hop",
+   "id": "content>seo",
+   "note": "lead 60"
+  },
+  {
+   "frame": 792,
+   "t": 26.4,
+   "type": "handoff_hop",
+   "id": "ads>social",
+   "note": "lead 68"
+  },
+  {
+   "frame": 792,
+   "t": 26.4,
+   "type": "heap_landing",
+   "id": "web",
+   "note": "lead 59"
+  },
+  {
+   "frame": 797,
+   "t": 26.567,
+   "type": "heap_landing",
+   "id": "web",
+   "note": "lead 60"
+  },
+  {
+   "frame": 820,
+   "t": 27.333,
+   "type": "heap_landing",
+   "id": "web",
+   "note": "lead 62"
+  },
+  {
+   "frame": 821,
+   "t": 27.367,
+   "type": "handoff_hop",
+   "id": "social>content",
+   "note": "lead 67"
+  },
+  {
+   "frame": 840,
+   "t": 28,
+   "type": "freeze_start",
+   "id": "freeze",
+   "note": "frames 840-899 are pixel-static (cover frame)"
+  }
+ ]
+}

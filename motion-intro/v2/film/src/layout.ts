@@ -39,7 +39,7 @@ export type Layout = {
     role: {size: number};
     pill: {top: number; right: number; size: number};
     url: {size: number};
-    sig: {x: number; y: number; w: number}; // machine signature caption (under the small machine)
+    sig: {x: number; y: number; w: number} | null; // machine signature caption (under the small machine); null = none
     machinePool: {x: number; y: number; r: number};
     fadeFrom: number; // y where the portrait starts fading into navy
     fadeTo: number;
@@ -48,9 +48,10 @@ export type Layout = {
   safe: [number, number]; // y range for text + key action
 };
 
+const ZW = '\u200c';
 const AI_LINES_2 = [
   ['سیستمی', 'که', 'با', 'هوش', 'مصنوعی،'],
-  ['شبانه‌روز', 'برات', 'مشتری', 'پیدا', 'می‌کنه.'],
+  [`شبانه${ZW}روز`, 'برات', 'مشتری', 'پیدا', `می${ZW}کنه.`],
 ];
 
 export const LAYOUTS: Record<LayoutId, Layout> = {
@@ -59,17 +60,19 @@ export const LAYOUTS: Record<LayoutId, Layout> = {
     W: 1080,
     H: 1920,
     cams: {
-      f1: {target: [0.1, 3.5, 0], yaw: 20, pitch: 9, ppu: 98, fov: 24, anchor: [540, 1205]},
-      run: {target: [0.05, 3.55, 0], yaw: 5, pitch: 8, ppu: 106, fov: 24, anchor: [560, 1175]},
-      late: {target: [0.05, 3.6, 0], yaw: -4, pitch: 7, ppu: 118, fov: 24, anchor: [552, 1075]},
-      endA: {target: [0.0, 3.6, 0], yaw: -10, pitch: 6, ppu: 62, fov: 22, anchor: [205, 1010]},
-      endB: {target: [0.0, 3.6, 0], yaw: -12, pitch: 6, ppu: 46, fov: 22, anchor: [190, 1045]},
+      // 9:16 safe area: the whole machine (scattered, snap and run) stays inside y 220..1600
+      f1: {target: [0.15, 3.4, 0], yaw: 18, pitch: 9, ppu: 100, fov: 24, anchor: [540, 1186]},
+      run: {target: [0.0, 3.6, 0], yaw: 3, pitch: 8, ppu: 112, fov: 24, anchor: [552, 1126]},
+      late: {target: [0.0, 3.6, 0], yaw: -5, pitch: 7, ppu: 128, fov: 24, anchor: [548, 1040]},
+      // end card: the small machine sits low beside his left shoulder; the shoulder overlaps its plinth (depth)
+      endA: {target: [0.0, 3.6, 0], yaw: -10, pitch: 6, ppu: 62, fov: 22, anchor: [238, 1068]},
+      endB: {target: [0.0, 3.6, 0], yaw: -12, pitch: 6, ppu: 46, fov: 22, anchor: [226, 1102]},
     },
     text: {
       f1: {top: 222, right: 84, width: 912, size: 112, lh: 1.24, align: 'right'},
       tension: {top: 222, right: 84, width: 912, size: 112, lh: 1.24, align: 'right'},
       connect: {top: 222, right: 84, width: 912, size: 100, lh: 1.26, align: 'right'},
-      ai: {top: 230, right: 84, width: 912, size: 76, lh: 1.42, align: 'right'},
+      ai: {top: 232, right: 72, width: 936, size: 70, lh: 1.4, align: 'right'},
       aiLines: AI_LINES_2,
     },
     end: {
@@ -77,13 +80,13 @@ export const LAYOUTS: Record<LayoutId, Layout> = {
       pool: {x: 600, y: 860, rx: 560, ry: 640},
       name: {top: 226, right: 84, width: 912, size: 132, align: 'right'},
       role: {size: 44},
-      pill: {top: 1400, right: 84, size: 42},
+      pill: {top: 1430, right: 116, size: 42}, // inset from the right edge (Reels/TikTok action rail)
       url: {size: 34},
-      sig: {x: 190, y: 1300, w: 340},
-      machinePool: {x: 190, y: 1120, r: 300},
-      fadeFrom: 1250,
-      fadeTo: 1560,
-      blur: 2.2,
+      sig: null, // the Latin caption would sit on his shoulder in 9:16 -> dropped (brief: >= 28 px or drop it)
+      machinePool: {x: 226, y: 1165, r: 300},
+      fadeFrom: 1300, // below the machine's plinth (y <= 1295): the fade never reveals the machine through him
+      fadeTo: 1580,
+      blur: 3.2,
     },
     safe: [220, 1600],
   },
@@ -93,30 +96,33 @@ export const LAYOUTS: Record<LayoutId, Layout> = {
     H: 1080,
     cams: {
       f1: {target: [0.1, 3.5, 0], yaw: 20, pitch: 9, ppu: 96, fov: 22, anchor: [600, 560]},
-      run: {target: [0.05, 3.55, 0], yaw: 5, pitch: 8, ppu: 104, fov: 22, anchor: [600, 548]},
-      late: {target: [0.05, 3.6, 0], yaw: -4, pitch: 7, ppu: 110, fov: 22, anchor: [610, 548]},
-      endA: {target: [0.0, 3.6, 0], yaw: -10, pitch: 6, ppu: 62, fov: 20, anchor: [290, 560]},
-      endB: {target: [0.0, 3.6, 0], yaw: -12, pitch: 6, ppu: 48, fov: 20, anchor: [270, 585]},
+      run: {target: [0.05, 3.55, 0], yaw: 5, pitch: 8, ppu: 104, fov: 22, anchor: [600, 528]},
+      late: {target: [0.05, 3.6, 0], yaw: -4, pitch: 7, ppu: 106, fov: 22, anchor: [610, 526]},
+      endA: {target: [0.0, 3.6, 0], yaw: -10, pitch: 6, ppu: 62, fov: 20, anchor: [250, 560]},
+      // the signature sits 45 px further left than before: its soft edge keeps >= 80 px from the text column
+      endB: {target: [0.0, 3.6, 0], yaw: -12, pitch: 6, ppu: 48, fov: 20, anchor: [225, 585]},
     },
     text: {
-      f1: {top: 250, right: 110, width: 720, size: 100, lh: 1.24, align: 'right'},
-      tension: {top: 300, right: 110, width: 720, size: 100, lh: 1.24, align: 'right'},
-      connect: {top: 300, right: 110, width: 720, size: 92, lh: 1.26, align: 'right'},
-      ai: {top: 330, right: 110, width: 720, size: 68, lh: 1.42, align: 'right'},
+      f1: {top: 270, right: 110, width: 800, size: 92, lh: 1.26, align: 'right'},
+      tension: {top: 330, right: 110, width: 800, size: 92, lh: 1.26, align: 'right'},
+      connect: {top: 290, right: 110, width: 800, size: 86, lh: 1.28, align: 'right'},
+      ai: {top: 380, right: 110, width: 800, size: 58, lh: 1.45, align: 'right'},
       aiLines: AI_LINES_2,
     },
     end: {
-      portrait: {cx: 1330, headTop: 150, headW: 300},
-      pool: {x: 1330, y: 420, rx: 520, ry: 560},
-      name: {top: 300, right: 860, width: 640, size: 112, align: 'right'},
-      role: {size: 38},
-      pill: {top: 0, right: 860, size: 36},
-      url: {size: 30},
-      sig: {x: 270, y: 815, w: 360},
-      machinePool: {x: 270, y: 640, r: 260},
+      portrait: {cx: 1450, headTop: 150, headW: 300}, // right of centre; his shoulder clears the URL line by >= 70 px
+      pool: {x: 1450, y: 420, rx: 520, ry: 560},
+      name: {top: 300, right: 875, width: 640, size: 112, align: 'right'},
+      // CTA sized for 16:9 played full-width on a phone (~390 pt wide): pill ~9 pt, URL ~7.7 pt; the role line stays
+      // on one line in the 640 px column (39 px is its maximum)
+      role: {size: 39},
+      pill: {top: 0, right: 875, size: 44},
+      url: {size: 38},
+      sig: {x: 225, y: 815, w: 360},
+      machinePool: {x: 225, y: 640, r: 260},
       fadeFrom: 820,
       fadeTo: 1080,
-      blur: 2.0,
+      blur: 2.8,
     },
     safe: [60, 1020],
   },

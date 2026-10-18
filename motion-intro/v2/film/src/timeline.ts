@@ -13,9 +13,9 @@ export const TXT = {
   site: 17, // «سایت داری.» ~0.56 s
   page: 57, // «پیج داری.» ~1.9 s
   ads: 96, // «تبلیغ هم می‌کنی...» ~3.2 s
-  seen: 150, // «دیده می‌شی...» ~5.0 s
-  sell: 219, // «ولی نمی‌فروشی.» ~7.3 s (music dip)
-  f1Out: 246, // tension copy clears before the breath beat
+  seen: 154, // «دیده می‌شی...» 5.13 s (VO onset 4.92 s); the F1 block holds until 152 so «تبلیغ هم می‌کنی...» reads >= 1.5 s
+  sell: 200, // «ولی نمی‌فروشی.» 6.67 s = on the spoken «ولی» (VO 6.70-7.9 s, music dip)
+  f1Out: 261, // tension copy holds through the breath beat (>= 1.5 s fully visible) and is gone by 269, before the hit
   connect: 285, // «من این تیکه‌ها رو به هم وصل می‌کنم.» ~9.5 s
   system: onBeat(12.8), // «یه سیستم.» on the beat nearest 12.8 s (= 387)
   clickOut: 470,
@@ -42,3 +42,20 @@ export const WOBBLE = {start: LAST_LOCK, amp: 0.034, tau: 9, period: 15};
 export const BELL_ENTRY = 318;
 export const NIGHT: [number, number] = [482, 650];
 export const CAM_PUSH: [number, number] = [258, 330];
+
+// the machine's clock eases to a stop by the freeze frame (no hard stop of the leads)
+const EASE_OUT = 50;
+export const machineTime = (F: number) => {
+  const a = FREEZE - EASE_OUT;
+  if (F <= a) return F;
+  const u = Math.min(1, (F - a) / EASE_OUT);
+  return a + EASE_OUT * (u - (u * u) / 2);
+};
+// inverse (machine clock -> video frame); Infinity if it never happens on screen
+export const videoFrameOf = (fm: number) => {
+  const a = FREEZE - EASE_OUT;
+  if (fm <= a) return fm;
+  const k = 1 - (2 * (fm - a)) / EASE_OUT;
+  if (k < 0) return Infinity;
+  return a + EASE_OUT * (1 - Math.sqrt(k));
+};

@@ -94,6 +94,8 @@ export const makeMats = () => {
   const ivory = new THREE.MeshStandardMaterial({color: '#ece4d2', roughness: 0.6, envMapIntensity: 0.75});
   const ivoryBack = ivory.clone();
   ivoryBack.side = THREE.BackSide;
+  // content grooves: paper-coloured channels, so the switchback reads as lines on a document
+  const paper = new THREE.MeshPhysicalMaterial({color: '#e2d7bf', roughness: 0.42, clearcoat: 0.5, clearcoatRoughness: 0.25, envMapIntensity: 0.85});
   const ivoryDark = new THREE.MeshStandardMaterial({color: '#d2c6ab', roughness: 0.55, envMapIntensity: 0.7});
   const gold = new THREE.MeshPhysicalMaterial({color: '#e2b866', metalness: 1, roughness: 0.2, envMapIntensity: 1.4});
   const slate = new THREE.MeshStandardMaterial({color: '#8a9bb5', roughness: 0.5, envMapIntensity: 0.6});
@@ -113,14 +115,8 @@ export const makeMats = () => {
   });
   const glassCheap = new THREE.MeshPhysicalMaterial({color: '#f4ecdd', roughness: 0.05, metalness: 0, transparent: true, opacity: 0.16, envMapIntensity: 1.3, clearcoat: 1, depthWrite: false});
   const map = marbleMap();
-  const marble = new THREE.MeshPhysicalMaterial({color: '#f3c36c', metalness: 1, roughness: 0.14, envMapIntensity: 1.7, map, emissive: new THREE.Color('#d39a3c'), emissiveIntensity: 0.1});
-  const ghost = [0.42, 0.24, 0.12].map((o) => {
-    const g = marble.clone();
-    g.transparent = true;
-    g.opacity = o;
-    g.depthWrite = false;
-    return g;
-  });
+  const marble = new THREE.MeshStandardMaterial({color: '#f3c36c', metalness: 1, roughness: 0.14, envMapIntensity: 1.7, map, emissive: new THREE.Color('#d39a3c'), emissiveIntensity: 0.1});
+  const ghost = [0.42, 0.24, 0.12].map((o) => new THREE.MeshStandardMaterial({color: '#f3c36c', metalness: 1, roughness: 0.3, envMapIntensity: 1.5, emissive: new THREE.Color('#d39a3c'), emissiveIntensity: 0.15, transparent: true, opacity: o, depthWrite: false}));
   const blob = new THREE.MeshBasicMaterial({
     map: radialTexture([
       [0, 'rgba(0,0,0,0.75)'],
@@ -172,17 +168,28 @@ export const makeMats = () => {
     haloM[m] = halo.clone();
   }
   const railGold = gold.clone();
-  return {navy, navyMatte, plinth, ivory, ivoryBack, ivoryDark, gold, slate, slateDim, glass, glassCheap, marble, ghost, blob, glowTex, flow, flowPlinth, ripple, loadBar, accent, collar, inlay, haloM, railGold};
+  // plinth: gold band with an emissive term (flares on the hit, then a warm resting glow so it never reads brown)
+  const band = new THREE.MeshPhysicalMaterial({color: '#e2b866', metalness: 1, roughness: 0.26, envMapIntensity: 1.4, emissive: new THREE.Color('#f5b94e'), emissiveIntensity: 0});
+  const plinthInlay = new THREE.MeshBasicMaterial({color: '#41516d', toneMapped: false});
+  return {band, plinthInlay, navy, navyMatte, plinth, paper, ivory, ivoryBack, ivoryDark, gold, slate, slateDim, glass, glassCheap, marble, ghost, blob, glowTex, flow, flowPlinth, ripple, loadBar, accent, collar, inlay, haloM, railGold};
 };
 
 const INLAY_OFF = new THREE.Color('#40506b');
 const INLAY_ON = new THREE.Color('#ffd27c');
+const INLAY_PAPER = new THREE.Color('#e0a440');
+// plinth on the hit: band + inlay ignite (flash), settle, and light fully once the current reaches the browser
+export const setPlinthPower = (M: Mats, flash: number, settled: number, web: number, boost: number) => {
+  M.band.emissiveIntensity = (2.6 * flash + 0.22 * settled + 0.25 * web) * boost;
+  M.plinthInlay.color.copy(INLAY_OFF).lerp(INLAY_ON, Math.min(1, Math.max(web, 0.35 * settled, flash))).multiplyScalar(1 + (web * 0.5 * boost + flash * 1.6));
+};
 export const setModulePower = (M: Mats, m: Mod, p: number, flash: number, boost: number) => {
   M.accent[m].set(p, boost);
   const c = M.collar[m];
   c.color.set('#a98443').lerp(new THREE.Color('#f2c56e'), p);
   c.roughness = 0.32 - 0.12 * p;
   c.emissiveIntensity = (0.32 * p + 1.4 * flash) * boost;
-  M.inlay[m].color.copy(INLAY_OFF).lerp(INLAY_ON, p).multiplyScalar(1 + p * 0.5 * boost + flash * 0.8);
-  M.haloM[m].uniforms.uI.value = (0.55 * p + 0.9 * flash) * boost;
+  // on the ivory page the current is a fine gold line, not a glowing tube
+  const paper = m === 'content' ? 0.55 : 1;
+  M.inlay[m].color.copy(INLAY_OFF).lerp(paper < 1 ? INLAY_PAPER : INLAY_ON, p).multiplyScalar(1 + (p * 0.5 * boost + flash * 0.8) * paper);
+  M.haloM[m].uniforms.uI.value = (0.55 * p + 0.9 * flash) * boost * paper * paper;
 };

@@ -9,7 +9,7 @@ const V = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);
 // ---------------------------------------------------------------------------
 // Geometry, built once per page
 // ---------------------------------------------------------------------------
-type ChGeo = {body: THREE.BufferGeometry; collars: {geo: THREE.BufferGeometry; at: THREE.Vector3}[]; inlay: THREE.BufferGeometry; halo: THREE.BufferGeometry};
+type ChGeo = {body: THREE.BufferGeometry; collars: {geo: THREE.BufferGeometry; at: THREE.Vector3; q: THREE.Quaternion}[]; inlay: THREE.BufferGeometry; halo: THREE.BufferGeometry};
 
 let _geo: ReturnType<typeof buildGeo> | null = null;
 export const machineGeo = () => {
@@ -25,8 +25,10 @@ const buildGeo = () => {
     const body = sweep(c.pts, c.frames, prof, {capStart: c.capStart, capEnd: c.capEnd});
     const collars: ChGeo['collars'] = [];
     const nC = 3;
-    if (c.collarStart) collars.push({geo: sweep(c.pts, c.frames, collarProf, {from: 0, to: nC, capStart: true, capEnd: true}), at: c.pts[0].clone()});
-    if (c.collarEnd) collars.push({geo: sweep(c.pts, c.frames, collarProf, {from: c.pts.length - 1 - nC, to: c.pts.length - 1, capStart: true, capEnd: true}), at: c.pts[c.pts.length - 1].clone()});
+    const qAt = (i: number) => new THREE.Quaternion().setFromUnitVectors(V(0, 0, 1), c.frames.T[i]);
+    if (c.collarStart) collars.push({geo: sweep(c.pts, c.frames, collarProf, {from: 0, to: nC, capStart: true, capEnd: true}), at: c.pts[1].clone(), q: qAt(1)});
+    if (c.collarEnd)
+      collars.push({geo: sweep(c.pts, c.frames, collarProf, {from: c.pts.length - 1 - nC, to: c.pts.length - 1, capStart: true, capEnd: true}), at: c.pts[c.pts.length - 2].clone(), q: qAt(c.pts.length - 2)});
     // the current: a thin line on the inner back wall (marbles ride in front of it)
     const inl = c.pts.map((p, i) => {
       const back = c.frames.S[i].z < 0 ? 1 : -1;
@@ -186,14 +188,17 @@ export type MachineGeo = ReturnType<typeof buildGeo>;
 // ---------------------------------------------------------------------------
 // Renderers (machine space)
 // ---------------------------------------------------------------------------
-export const Channels: React.FC<{g: ChGeo[]; M: Mats; m: Mod; collarScale: number; powered: boolean}> = ({g, M, m, collarScale, powered}) => (
+const ringGeo = new THREE.TorusGeometry(CR + CW + 0.018, 0.034, 8, 32);
+export const Channels: React.FC<{g: ChGeo[]; M: Mats; m: Mod; collarScale: number; powered: boolean; body?: THREE.Material}> = ({g, M, m, collarScale, powered, body}) => (
   <>
     {g.map((c, i) => (
       <group key={i}>
-        <mesh geometry={c.body} material={M.navy} castShadow receiveShadow />
+        <mesh geometry={c.body} material={body ?? M.navy} castShadow receiveShadow={!!body} />
         {c.collars.map((cg, j) => (
           <group key={j} position={cg.at} scale={collarScale}>
             <mesh geometry={cg.geo} position={[-cg.at.x, -cg.at.y, -cg.at.z]} material={M.collar[m]} castShadow />
+            {/* coupling ring: the hand-off reads as a collar, not a tab */}
+            <mesh geometry={ringGeo} quaternion={cg.q} material={M.collar[m]} castShadow />
           </group>
         ))}
         <mesh geometry={c.inlay} material={M.inlay[m]} />
@@ -212,8 +217,8 @@ export const Megaphone: React.FC<{G: MachineGeo; M: Mats}> = ({G, M}) => {
   return (
     <group>
       <group position={D} quaternion={q}>
-        <mesh geometry={G.megIn} material={M.ivoryBack} receiveShadow />
-        <mesh geometry={G.megOut} material={M.navy} castShadow receiveShadow />
+        <mesh geometry={G.megIn} material={M.ivoryBack} />
+        <mesh geometry={G.megOut} material={M.navy} castShadow />
         {/* bell rim (accent) */}
         <mesh position={[0, mL, 0]} rotation={[Math.PI / 2, 0, 0]} material={M.accent.ads.mat} castShadow>
           <torusGeometry args={[r1 + 0.03, 0.04, 12, 56]} />
@@ -221,7 +226,7 @@ export const Megaphone: React.FC<{G: MachineGeo; M: Mats}> = ({G, M}) => {
       </group>
       {/* driver housing: a squat cylinder, closed at the back */}
       <group position={driverC} quaternion={q}>
-        <mesh material={M.navy} castShadow receiveShadow>
+        <mesh material={M.navy} castShadow>
           <cylinderGeometry args={[0.31, 0.31, 0.36, 36]} />
         </mesh>
         <mesh position={[0, -0.18, 0]} scale={[1, 0.32, 1]} material={M.navy} castShadow>
@@ -316,7 +321,7 @@ export const WebPiece: React.FC<{G: MachineGeo; M: Mats; load: number}> = ({G, M
   return (
     <group>
       <mesh geometry={G.backGeo} position={[0, 0, b.z0 - 0.02]} material={M.ivory} receiveShadow />
-      <mesh geometry={G.frameGeo} position={[0, 0, b.z0]} material={M.navy} castShadow receiveShadow />
+      <mesh geometry={G.frameGeo} position={[0, 0, b.z0]} material={M.navy} castShadow />
       {[0, 1, 2].map((i) => (
         <mesh key={i} position={[x0 + i * 0.21, barY, front + 0.01]} rotation={[Math.PI / 2, 0, 0]} material={M.accent.web.mat}>
           <cylinderGeometry args={[0.058, 0.058, 0.03, 20]} />
@@ -325,15 +330,28 @@ export const WebPiece: React.FC<{G: MachineGeo; M: Mats; load: number}> = ({G, M
       {/* address pill: slate track, gold loading bar fills as leads arrive */}
       <mesh geometry={G.urlGeo} position={[urlX, barY, front - 0.005]} material={M.slateDim} />
       {load > 0.003 && <mesh geometry={G.loadGeo} position={[urlX - 0.7, barY, front + 0.022]} scale={[1.4 * Math.min(1, load), 1, 1]} material={M.loadBar} />}
-      {/* intake port collar on top */}
+      {/* intake port: gold collar around a dark slot cut into the bezel top (leads drop straight in) */}
       <mesh position={[b.port.x, b.top + 0.035, 0]} rotation={[Math.PI / 2, 0, 0]} material={M.collar.web} castShadow>
         <torusGeometry args={[CR + 0.03, 0.04, 10, 36]} />
       </mesh>
+      <mesh position={[b.port.x, b.top + 0.032, 0]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={1}>
+        <circleGeometry args={[CR + 0.012, 36]} />
+        <meshBasicMaterial color="#03070f" polygonOffset polygonOffsetFactor={-2} polygonOffsetUnits={-2} />
+      </mesh>
+      {/* the chute mouth under the window's top edge: a short gold spout the leads drop out of */}
+      <group position={[b.port.x, b.winTop, 0]}>
+        <mesh position={[0, -0.035, 0]} material={M.collar.web}>
+          <cylinderGeometry args={[CR + 0.02, CR + 0.035, 0.07, 28, 1, true]} />
+        </mesh>
+        <mesh position={[0, -0.07, 0]} rotation={[Math.PI / 2, 0, 0]} material={M.collar.web}>
+          <torusGeometry args={[CR + 0.035, 0.018, 8, 28]} />
+        </mesh>
+      </group>
     </group>
   );
 };
 
-export const Chassis: React.FC<{G: MachineGeo; M: Mats; rise: {y: number; s: number; visible: boolean}; plate: number; power: number; phase: number}> = ({G, M, rise, plate, power, phase}) => {
+export const Chassis: React.FC<{G: MachineGeo; M: Mats; rise: {y: number; s: number; sy: number; visible: boolean}; plate: number; power: number; phase: number}> = ({G, M, rise, plate, power, phase}) => {
   if (!rise.visible) return null;
   const pt = G.L.plate;
   M.flow.opacity = power;
@@ -342,10 +360,11 @@ export const Chassis: React.FC<{G: MachineGeo; M: Mats; rise: {y: number; s: num
   (M.flowPlinth.map as THREE.Texture).offset.x = phase * 0.6;
   return (
     <group>
-      <group position={[0, rise.y, 0]} scale={[rise.s, 1, rise.s]}>
+      <group position={[0, rise.y, 0]} scale={[rise.s, rise.sy, rise.s]}>
         <mesh geometry={G.plinthGeo} material={M.plinth} castShadow receiveShadow />
-        <mesh geometry={G.bandGeo} material={M.gold} />
-        <mesh geometry={G.ringGeo} material={M.inlay.web} />
+        {/* gold band + inlay light ignite on the hit (Scene drives M.band / M.plinthInlay) */}
+        <mesh geometry={G.bandGeo} material={M.band} />
+        <mesh geometry={G.ringGeo} material={M.plinthInlay} />
         {power > 0.01 && <mesh geometry={G.ringFlowGeo} material={M.flowPlinth} />}
       </group>
       {plate > 0.001 && (

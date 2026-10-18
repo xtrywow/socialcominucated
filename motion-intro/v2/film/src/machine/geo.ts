@@ -4,8 +4,8 @@ const V = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);
 const UP = V(0, 1, 0);
 
 // ---- channel dimensions (world units) ----
-export const MR = 0.11; // marble radius
-export const CR = 0.152; // channel inner radius
+export const MR = 0.12; // marble radius
+export const CR = 0.162; // channel inner radius
 export const CW = 0.046; // wall thickness
 export const LIP = 0.04; // straight wall above the semicircle
 

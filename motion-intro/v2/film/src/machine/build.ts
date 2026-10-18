@@ -40,7 +40,7 @@ export type MachineLayout = {
   loop: {x0: number; x1: number; y0: number; y1: number; z: number; heart: THREE.Vector3};
   page: {x0: number; x1: number; y0: number; y1: number; z: number; fold: number; head: [number, number, number, number]; lines: [number, number, number][]};
   seo: {panel: [number, number, number, number]; z: number; lens: THREE.Vector3; r: number; handleAng: number};
-  box: {cx: number; cy: number; w: number; h: number; z0: number; depth: number; top: number; port: THREE.Vector3; bar: number};
+  box: {cx: number; cy: number; w: number; h: number; z0: number; depth: number; top: number; port: THREE.Vector3; bar: number; winTop: number; innerBottom: number};
   heap: THREE.Vector3[];
   plinth: {w: number; d: number; h: number; zc: number};
   plate: {x0: number; x1: number; y0: number; y1: number; z: number; t: number};
@@ -53,6 +53,8 @@ export type MachineLayout = {
 };
 
 const UPM: FrameMode = {mode: 'up', tilt: 0.62};
+export const HEAP_ROWS = 4;
+export const HEAP_ROW = MR * 1.68; // row pitch (the two z layers interleave, so rows can sit a little tighter than hex packing)
 
 const mkChannel = (pts: THREE.Vector3[], fm: FrameMode, o: Partial<Channel> = {}): Channel => ({
   pts,
@@ -110,26 +112,24 @@ const build = (): MachineLayout => {
   const ramp2 = mkChannel(t2.slice(0), UPM);
   const ramp3 = mkChannel(t3.slice(0), UPM, {collarEnd: true});
 
-  const pageX0 = Math.min(r1e.x, r2s.x, r3e.x) + 0.2;
-  const pageX1 = Math.max(r1s.x, r2e.x, r3s.x) - 0.2;
-  const pageY1 = r1s.y + 0.62;
-  const pageY0 = r3e.y - 0.36;
+  // the page is wider than its grooves: the whole switchback sits ON the document
+  const pageX0 = Math.min(r1e.x, r2s.x, r3e.x) - 0.3;
+  const pageX1 = Math.max(r1s.x, r2e.x, r3s.x) + 0.26;
+  const pageY1 = r1s.y + 0.8;
+  const pageY0 = r3e.y - 0.5;
   const page = {
     x0: pageX0,
     x1: pageX1,
     y0: pageY0,
     y1: pageY1,
-    z: -0.215,
-    fold: 0.58,
-    // RTL headline bar: right-aligned under the top edge
-    head: [pageX1 - 1.55, r1s.y + 0.27, pageX1 - 0.22, r1s.y + 0.44] as [number, number, number, number],
+    z: -0.225,
+    fold: 0.66,
+    // RTL headline bar: flush right under the top edge
+    head: [pageX1 - 1.85, r1s.y + 0.36, pageX1 - 0.26, r1s.y + 0.58] as [number, number, number, number],
     lines: [] as [number, number, number][],
   };
-  // short "text" hairlines (RTL: flush right, ragged left), between the grooves
-  {
-    page.lines.push([pageX1 - 1.0, pageY0 + 0.2, pageX1 - 0.22]);
-    page.lines.push([pageX1 - 1.9, pageY0 + 0.2 - 0.0, pageX1 - 1.15]);
-  }
+  // body-text hairlines under the last groove (RTL: flush right, ragged left)
+  page.lines.push([pageX1 - 2.45, pageY0 + 0.17, pageX1 - 0.26]);
 
   // ------------------------------------------------------------ SOCIAL: rounded-square loop
   const LS = 0.52; // side
@@ -137,7 +137,7 @@ const build = (): MachineLayout => {
   const LOOP_DZ = 0.46;
 
   // ------------------------------------------------------------ ADS: megaphone (cone, not a flare)
-  const D = V(-1.12, r1s.y + 1.52, -0.05); // driver centre (rear of the cone)
+  const D = V(-1.42, r1s.y + 1.52, -0.05); // driver centre (rear of the cone)
   const axis = dirDeg(147); // driver -> bell, up-left
   const L = 1.12;
   const r0 = 0.25;
@@ -153,7 +153,7 @@ const build = (): MachineLayout => {
   const E = tA.p.clone(); // hand-off ads -> social
 
   const tL = new Turtle(E, dirDeg(0));
-  const a = LS + LR + 0.14;
+  const a = LS + LR + 0.44; // the ads->social collar sits clear of the loop silhouette
   const loopLen = 4 * (Math.PI / 2) * LR + 3 * LS;
   const k = LOOP_DZ / loopLen;
   tL.line(a);
@@ -187,8 +187,8 @@ const build = (): MachineLayout => {
   };
   // feed: a lead is lobbed in from off-frame left on a ballistic arc into the bell
   const bellIn = megBottom(0.92).add(V(0, 0.16, 0));
-  const launch = V(bellIn.x - 3.1, bellIn.y - 1.2, 0.35);
-  const apex = V((launch.x + bellIn.x) / 2 + 0.25, bellIn.y + 0.95, 0.2);
+  const launch = V(bellIn.x - 3.3, bellIn.y - 1.9, 0.35);
+  const apex = V((launch.x + bellIn.x) / 2 + 0.55, bellIn.y + 0.62, 0.2);
   const feed: THREE.Vector3[] = [];
   for (let x = launch.x - 1.6; x < launch.x; x += 0.2) feed.push(V(x, launch.y - (launch.x - x) * 0.9, launch.z));
   feed.push(...bez(launch, apex, bellIn, 30));
@@ -246,9 +246,12 @@ const build = (): MachineLayout => {
   const path = new Polyline(P);
 
   // ------------------------------------------------------------ heap slots inside the browser window
+  // A mound that grows under the intake chute and spreads left. Capped at 4 rows so the top row always stays
+  // under the window's top inset (row 3 top = 1.10, window top = 1.25, visible to ~1.20 past the bezel lip).
   const heap: THREE.Vector3[] = [];
+  const innerBottom = box.y0 + 0.1;
+  const winTop = boxCy - box.bar / 2 + (box.h - box.bar - 0.12) / 2;
   {
-    const innerBottom = box.y0 + 0.13;
     const innerLeft = box.cx - box.w / 2 + 0.2;
     const innerRight = box.cx + box.w / 2 - 0.2;
     const d = MR * 2.04;
@@ -257,23 +260,21 @@ const build = (): MachineLayout => {
       seed = (seed * 16807) % 2147483647;
       return (seed - 1) / 2147483646;
     };
-    for (let row = 0; row < 5; row++) {
+    for (let row = 0; row < HEAP_ROWS; row++) {
       for (const zz of [0.11, -0.1]) {
         const off = (row % 2) * MR + (zz > 0 ? MR * 0.5 : 0);
         for (let x = innerLeft + MR + off; x < innerRight - MR; x += d) {
-          // heap profile: tallest under the port, sloping away to the left
           const dist = Math.abs(x - port.x);
-          const maxRows = 1 + Math.floor(Math.max(0, 4.6 - dist * 1.25));
-          if (row >= Math.min(5, maxRows)) continue;
-          heap.push(V(x + (rnd() - 0.5) * 0.025, innerBottom + MR + row * MR * 1.74 + (rnd() - 0.5) * 0.012, zz + (rnd() - 0.5) * 0.03));
+          const maxRows = dist < 1.8 ? 4 : dist < 2.6 ? 3 : 2;
+          if (row >= maxRows) continue;
+          heap.push(V(x + (rnd() - 0.5) * 0.025, innerBottom + MR + row * HEAP_ROW + (rnd() - 0.5) * 0.01, zz + (rnd() - 0.5) * 0.03));
         }
       }
     }
-    heap.sort((p, q) => {
-      const kp = (p.y - innerBottom) * 2.4 + Math.abs(p.x - port.x) * 1.0 + (p.z < 0 ? -0.05 : 0);
-      const kq = (q.y - innerBottom) * 2.4 + Math.abs(q.x - port.x) * 1.0 + (q.z < 0 ? -0.05 : 0);
-      return kp - kq;
-    });
+    // fill order: a low mound under the chute (marbles do not pile steeply: surface slope ~23 deg) that spreads left,
+    // so the ~40 leads that land by the cut cover the tray floor and read as a full window, not a corner pile
+    const key = (p: THREE.Vector3) => (p.y - innerBottom) * 1.0 + Math.abs(p.x - port.x) * 0.42 + (p.z < 0 ? -0.04 : 0);
+    heap.sort((p, q) => key(p) - key(q));
   }
 
   // ------------------------------------------------------------ chassis: plinth, backplate, gold rail
@@ -331,7 +332,7 @@ const build = (): MachineLayout => {
     loop,
     page,
     seo: {panel: [-2.0, SEO_Y - 0.36, 1.58, SEO_Y + 0.26], z: -0.24, lens: V(-0.62, SEO_Y + 0.02, 0.5), r: 0.4, handleAng: -0.85},
-    box: {cx: box.cx, cy: boxCy, w: box.w, h: box.h, z0: box.z0, depth: box.depth, top: boxTop, port, bar: box.bar},
+    box: {cx: box.cx, cy: boxCy, w: box.w, h: box.h, z0: box.z0, depth: box.depth, top: boxTop, port, bar: box.bar, winTop, innerBottom},
     heap,
     plinth,
     plate,
